@@ -3,190 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DSR — Desenvolvimento de Soluções Remotas</title>
+    <title>DSR — Desenvolvimento de Soluções Remotas | Anhanguera</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        :root {
+            --red:      #c0001a;
+            --red-dark: #8b0013;
+            --red-soft: #ffebee;
+            --blue:     #1565c0;
+            --amber:    #e65100;
+            --purple:   #4a148c;
+            --text:     #1a1a2e;
+            --muted:    #64748b;
+            --border:   #e2e8f0;
+            --bg:       #f8fafc;
         }
-        header {
-            background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
-            color: white;
-            padding: 2.5rem 1rem;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Inter', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+
+        .hero {
+            background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 60%, #e53935 100%);
+            color: #fff; padding: 3.5rem 1rem 0; position: relative; overflow: hidden;
         }
-        header h1 {
-            font-weight: 800;
-            letter-spacing: 1px;
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-        header p {
-            opacity: 0.9;
-            font-size: 1.1rem;
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: .4rem;
+            background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+            border-radius: 50px; padding: .3rem .9rem; font-size: .8rem; font-weight: 600;
+            letter-spacing: .5px; text-transform: uppercase; margin-bottom: 1.2rem;
         }
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem 1rem;
+        .hero h1 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; margin-bottom: .5rem; }
+        .hero-sub { font-size: 1.1rem; opacity: .85; max-width: 560px; }
+        .hero-pills { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
+        .hero-pill {
+            background: rgba(255,255,255,.13); border: 1px solid rgba(255,255,255,.2);
+            border-radius: 50px; padding: .25rem .75rem; font-size: .8rem; font-weight: 600;
         }
-        .card {
-            border: none;
-            border-radius: 18px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.10);
-            transition: transform 0.2s, box-shadow 0.2s;
-            overflow: hidden;
+        .hero-wave { display: block; margin-top: 2.5rem; width: 100%; height: 60px; }
+
+        .section-nav {
+            background: #fff; border-bottom: 2px solid var(--border);
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.06);
         }
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 18px 40px rgba(0,0,0,0.16);
+        .section-nav .nav-link {
+            color: var(--muted); font-weight: 600; font-size: .9rem; padding: 1rem 1.2rem;
+            border: none; border-bottom: 3px solid transparent; border-radius: 0; transition: all .2s;
         }
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 0.75rem;
+        .section-nav .nav-link:hover, .section-nav .nav-link.active {
+            color: var(--red); border-bottom-color: var(--red); background: var(--red-soft);
         }
-        .card-aula .card-header {
-            background: linear-gradient(135deg, #b71c1c, #d32f2f);
-            color: white;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 0.6rem 1rem;
+
+        .section-title { font-size: 1.5rem; font-weight: 800; margin-bottom: .25rem; }
+        .section-desc { color: var(--muted); font-size: .95rem; margin-bottom: 2rem; }
+        .section-line { width: 48px; height: 4px; border-radius: 4px; margin: .5rem 0 1rem; }
+
+        .dsr-card {
+            background: #fff; border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.05); transition: transform .2s, box-shadow .2s;
+            overflow: hidden; height: 100%; display: flex; flex-direction: column;
         }
-        .card-simulador .card-header {
-            background: linear-gradient(135deg, #1565c0, #1976d2);
-            color: white;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 0.6rem 1rem;
+        .dsr-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(0,0,0,.10); }
+        .card-stripe { height: 5px; width: 100%; }
+        .dsr-card-body { padding: 1.5rem; flex: 1; }
+        .card-num {
+            font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            padding: .25rem .65rem; border-radius: 50px; display: inline-block; margin-bottom: .75rem;
         }
-        .btn-aula {
-            background-color: #d32f2f;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
+        .dsr-card h5 { font-weight: 700; font-size: 1.05rem; margin-bottom: .5rem; }
+        .dsr-card p { font-size: .88rem; color: var(--muted); margin: 0; }
+        .dsr-card-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); background: var(--bg); }
+        .btn-dsr {
+            font-weight: 600; font-size: .88rem; border-radius: 8px; padding: .45rem 1.1rem;
+            border: none; display: inline-flex; align-items: center; gap: .4rem;
+            text-decoration: none; transition: filter .2s, transform .15s;
         }
-        .btn-aula:hover {
-            background-color: #b71c1c;
-            color: white;
+        .btn-dsr:hover { filter: brightness(1.1); transform: scale(1.03); }
+
+        .coming-soon { opacity: .55; pointer-events: none; }
+        .badge-soon {
+            font-size: .72rem; background: #e2e8f0; color: var(--muted);
+            border-radius: 50px; padding: .2rem .6rem; font-weight: 600; vertical-align: middle;
         }
-        .btn-simulador {
-            background-color: #1976d2;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        .btn-simulador:hover {
-            background-color: #1565c0;
-            color: white;
-        }
-        footer {
-            text-align: center;
-            padding: 1.2rem;
-            font-size: 0.85rem;
-            color: #666;
-            background: rgba(255,255,255,0.6);
-        }
+
+        .info-strip { background: linear-gradient(135deg, var(--red-dark), var(--red)); color: #fff; border-radius: 16px; padding: 2rem; }
+        .info-item { margin-bottom: 1rem; }
+        .info-item:last-child { margin-bottom: 0; }
+        .info-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: .7; }
+        .info-value { font-size: 1rem; font-weight: 600; }
+
+        footer { background: var(--text); color: rgba(255,255,255,.6); font-size: .83rem; padding: 2rem 1rem; text-align: center; }
+        footer strong { color: #fff; }
+        html { scroll-behavior: smooth; }
+        section { scroll-margin-top: 60px; }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1><i class="bi bi-pc-display-horizontal me-2"></i>DSR</h1>
-            <p class="mb-0">Desenvolvimento de Soluções Remotas</p>
+
+<div class="hero">
+    <div class="container position-relative">
+        <div class="row align-items-end">
+            <div class="col-lg-8">
+                <div class="hero-badge"><i class="bi bi-building"></i> Anhanguera &nbsp;&middot;&nbsp; Gradua&ccedil;&atilde;o em Tecnologia</div>
+                <h1>Desenvolvimento de<br>Solu&ccedil;&otilde;es Remotas</h1>
+                <p class="hero-sub">Conceitos, t&eacute;cnicas e ferramentas para o planejamento e execu&ccedil;&atilde;o de projetos remotos com efici&ecirc;ncia e controle de prazo.</p>
+                <div class="hero-pills">
+                    <span class="hero-pill"><i class="bi bi-calendar3 me-1"></i>2026</span>
+                    <span class="hero-pill"><i class="bi bi-code-slash me-1"></i>DSR</span>
+                    <span class="hero-pill"><i class="bi bi-diagram-3 me-1"></i>CPM / PERT</span>
+                    <span class="hero-pill"><i class="bi bi-people me-1"></i>Trabalho Remoto</span>
+                </div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-flex justify-content-end pb-3">
+                <i class="bi bi-pc-display-horizontal" style="font-size:7rem;opacity:.15;"></i>
+            </div>
         </div>
-    </header>
+    </div>
+    <svg class="hero-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,40 C360,80 1080,0 1440,40 L1440,60 L0,60 Z" fill="#f8fafc"/>
+    </svg>
+</div>
 
-    <main>
-        <div class="container">
-            <div class="row g-4 justify-content-center">
+<nav class="section-nav">
+    <div class="container">
+        <ul class="nav flex-nowrap overflow-auto">
+            <li class="nav-item"><a class="nav-link active" href="#aulas"><i class="bi bi-mortarboard me-1"></i>Aulas</a></li>
+            <li class="nav-item"><a class="nav-link" href="#aplicacoes"><i class="bi bi-cpu me-1"></i>Aplica&ccedil;&otilde;es</a></li>
+            <li class="nav-item"><a class="nav-link" href="#exercicios"><i class="bi bi-pencil-square me-1"></i>Exerc&iacute;cios</a></li>
+            <li class="nav-item"><a class="nav-link" href="#materiais"><i class="bi bi-folder2-open me-1"></i>Materiais</a></li>
+            <li class="nav-item"><a class="nav-link" href="#sobre"><i class="bi bi-person-badge me-1"></i>Professor</a></li>
+        </ul>
+    </div>
+</nav>
 
-                <!-- Aula 01 -->
-                <div class="col-12 col-md-4">
-                    <div class="card card-aula h-100">
-                        <div class="card-header">
-                            <i class="bi bi-journal-bookmark me-1"></i> Aula 01
-                        </div>
-                        <div class="card-body text-center p-4">
-                            <div class="card-icon text-danger">
-                                <i class="bi bi-mortarboard"></i>
+<main class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-8">
+
+            <!-- AULAS -->
+            <section id="aulas" class="mb-5">
+                <p class="section-title">Aulas</p>
+                <div class="section-line bg-danger"></div>
+                <p class="section-desc">Conte&uacute;do te&oacute;rico organizado por encontro. Navegue pelos slides interativos.</p>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="dsr-card">
+                            <div class="card-stripe bg-danger"></div>
+                            <div class="dsr-card-body">
+                                <span class="card-num" style="background:#ffebee;color:#c0001a;">Aula 01</span>
+                                <h5>Introdu&ccedil;&atilde;o ao DSR</h5>
+                                <p>Fundamentos do desenvolvimento de solu&ccedil;&otilde;es remotas, contexto de mercado, conceitos e defini&ccedil;&otilde;es essenciais.</p>
+                                <div class="mt-3 d-flex flex-wrap gap-1">
+                                    <span class="badge" style="background:#ffebee;color:#c0001a;">Conceitos</span>
+                                    <span class="badge" style="background:#ffebee;color:#c0001a;">Mercado</span>
+                                    <span class="badge" style="background:#ffebee;color:#c0001a;">Remoto</span>
+                                </div>
                             </div>
-                            <h5 class="card-title fw-bold">Introdução ao DSR</h5>
-                            <p class="card-text text-muted" style="font-size:0.9rem;">
-                                Conceitos fundamentais do desenvolvimento de soluções remotas e seu impacto no mercado atual.
-                            </p>
+                            <div class="dsr-card-footer">
+                                <a href="dsr.html" class="btn-dsr text-white" style="background:#c0001a;">
+                                    <i class="bi bi-play-circle-fill"></i> Acessar Aula
+                                </a>
+                            </div>
                         </div>
-                        <div class="card-footer bg-white border-0 text-center pb-4">
-                            <a href="dsr.html" class="btn btn-aula px-4 py-2">
-                                <i class="bi bi-play-circle me-1"></i> Acessar Aula
-                            </a>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="dsr-card">
+                            <div class="card-stripe bg-danger"></div>
+                            <div class="dsr-card-body">
+                                <span class="card-num" style="background:#ffebee;color:#c0001a;">Aula 02</span>
+                                <h5>Planejamento e Caminho Cr&iacute;tico</h5>
+                                <p>Gest&atilde;o de tempo, t&eacute;cnicas CPM e PERT, identifica&ccedil;&atilde;o do caminho cr&iacute;tico em projetos remotos.</p>
+                                <div class="mt-3 d-flex flex-wrap gap-1">
+                                    <span class="badge" style="background:#ffebee;color:#c0001a;">CPM</span>
+                                    <span class="badge" style="background:#ffebee;color:#c0001a;">PERT</span>
+                                    <span class="badge" style="background:#ffebee;color:#c0001a;">Prazo</span>
+                                </div>
+                            </div>
+                            <div class="dsr-card-footer">
+                                <a href="dsr2.html" class="btn-dsr text-white" style="background:#c0001a;">
+                                    <i class="bi bi-play-circle-fill"></i> Acessar Aula
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="dsr-card coming-soon">
+                            <div class="card-stripe" style="background:#e2e8f0;"></div>
+                            <div class="dsr-card-body">
+                                <span class="card-num" style="background:#f1f5f9;color:#94a3b8;">Aula 03</span>
+                                <h5>Ferramentas de Colabora&ccedil;&atilde;o <span class="badge-soon">Em breve</span></h5>
+                                <p>Plataformas e pr&aacute;ticas para comunica&ccedil;&atilde;o e entrega em equipes distribu&iacute;das.</p>
+                            </div>
+                            <div class="dsr-card-footer">
+                                <span class="btn-dsr" style="background:#e2e8f0;color:#94a3b8;cursor:not-allowed;"><i class="bi bi-lock"></i> Em breve</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="dsr-card coming-soon">
+                            <div class="card-stripe" style="background:#e2e8f0;"></div>
+                            <div class="dsr-card-body">
+                                <span class="card-num" style="background:#f1f5f9;color:#94a3b8;">Aula 04</span>
+                                <h5>Gest&atilde;o de Riscos Remotos <span class="badge-soon">Em breve</span></h5>
+                                <p>Identifica&ccedil;&atilde;o, an&aacute;lise e mitiga&ccedil;&atilde;o de riscos em ambientes de trabalho remoto.</p>
+                            </div>
+                            <div class="dsr-card-footer">
+                                <span class="btn-dsr" style="background:#e2e8f0;color:#94a3b8;cursor:not-allowed;"><i class="bi bi-lock"></i> Em breve</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Aula 02 -->
-                <div class="col-12 col-md-4">
-                    <div class="card card-aula h-100">
-                        <div class="card-header">
-                            <i class="bi bi-journal-bookmark me-1"></i> Aula 02
-                        </div>
-                        <div class="card-body text-center p-4">
-                            <div class="card-icon text-danger">
-                                <i class="bi bi-diagram-3"></i>
+            <!-- APLICACOES -->
+            <section id="aplicacoes" class="mb-5">
+                <p class="section-title">Aplica&ccedil;&otilde;es</p>
+                <div class="section-line" style="background:#1565c0;"></div>
+                <p class="section-desc">Ferramentas interativas para praticar os conceitos da disciplina.</p>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="dsr-card">
+                            <div class="card-stripe" style="background:#1565c0;"></div>
+                            <div class="dsr-card-body">
+                                <span class="card-num" style="background:#e3f2fd;color:#1565c0;">Simulador</span>
+                                <h5>Simulador CPM &mdash; Caminho Cr&iacute;tico</h5>
+                                <p>Insira atividades, dura&ccedil;&otilde;es e depend&ecirc;ncias. O simulador calcula automaticamente o caminho cr&iacute;tico e gera o diagrama de Gantt.</p>
+                                <div class="mt-3 d-flex flex-wrap gap-1">
+                                    <span class="badge" style="background:#e3f2fd;color:#1565c0;">Interativo</span>
+                                    <span class="badge" style="background:#e3f2fd;color:#1565c0;">Gantt</span>
+                                    <span class="badge" style="background:#e3f2fd;color:#1565c0;">CPM</span>
+                                </div>
                             </div>
-                            <h5 class="card-title fw-bold">Planejamento e Caminho Crítico</h5>
-                            <p class="card-text text-muted" style="font-size:0.9rem;">
-                                Gestão de tempo, CPM/PERT e análise do caminho crítico em projetos de soluções remotas.
-                            </p>
-                        </div>
-                        <div class="card-footer bg-white border-0 text-center pb-4">
-                            <a href="dsr2.html" class="btn btn-aula px-4 py-2">
-                                <i class="bi bi-play-circle me-1"></i> Acessar Aula
-                            </a>
+                            <div class="dsr-card-footer">
+                                <a href="SIMULADOR_DSR.html" class="btn-dsr text-white" style="background:#1565c0;">
+                                    <i class="bi bi-lightning-charge-fill"></i> Abrir Simulador
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Simulador -->
-                <div class="col-12 col-md-4">
-                    <div class="card card-simulador h-100">
-                        <div class="card-header">
-                            <i class="bi bi-cpu me-1"></i> Ferramenta
-                        </div>
-                        <div class="card-body text-center p-4">
-                            <div class="card-icon text-primary">
-                                <i class="bi bi-gear-wide-connected"></i>
+            <!-- EXERCICIOS -->
+            <section id="exercicios" class="mb-5">
+                <p class="section-title">Exerc&iacute;cios</p>
+                <div class="section-line" style="background:#e65100;"></div>
+                <p class="section-desc">Listas de exerc&iacute;cios e atividades avaliativas por aula.</p>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="dsr-card coming-soon">
+                            <div class="card-stripe" style="background:#e2e8f0;"></div>
+                            <div class="dsr-card-body">
+                                <span class="card-num" style="background:#fff3e0;color:#e65100;">Lista 01</span>
+                                <h5>Exerc&iacute;cios &mdash; Aula 01 <span class="badge-soon">Em breve</span></h5>
+                                <p>Quest&otilde;es sobre fundamentos e contexto do trabalho remoto.</p>
                             </div>
-                            <h5 class="card-title fw-bold">Simulador CPM</h5>
-                            <p class="card-text text-muted" style="font-size:0.9rem;">
-                                Simulador interativo para cálculo do Caminho Crítico (CPM) com diagrama de Gantt.
-                            </p>
+                            <div class="dsr-card-footer">
+                                <span class="btn-dsr" style="background:#e2e8f0;color:#94a3b8;cursor:not-allowed;"><i class="bi bi-lock"></i> Em breve</span>
+                            </div>
                         </div>
-                        <div class="card-footer bg-white border-0 text-center pb-4">
-                            <a href="SIMULADOR_DSR.html" class="btn btn-simulador px-4 py-2">
-                                <i class="bi bi-lightning-charge me-1"></i> Abrir Simulador
-                            </a>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="dsr-card coming-soon">
+                            <div class="card-stripe" style="background:#e2e8f0;"></div>
+                            <div class="dsr-card-body">
+                                <span class="card-num" style="background:#fff3e0;color:#e65100;">Lista 02</span>
+                                <h5>Exerc&iacute;cios &mdash; Aula 02 <span class="badge-soon">Em breve</span></h5>
+                                <p>Problemas pr&aacute;ticos de CPM, PERT e c&aacute;lculo de caminho cr&iacute;tico.</p>
+                            </div>
+                            <div class="dsr-card-footer">
+                                <span class="btn-dsr" style="background:#e2e8f0;color:#94a3b8;cursor:not-allowed;"><i class="bi bi-lock"></i> Em breve</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MATERIAIS -->
+            <section id="materiais" class="mb-5">
+                <p class="section-title">Materiais de Apoio</p>
+                <div class="section-line" style="background:#4a148c;"></div>
+                <p class="section-desc">Leituras, refer&ecirc;ncias bibliogr&aacute;ficas e recursos complementares.</p>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="dsr-card coming-soon">
+                            <div class="card-stripe" style="background:#e2e8f0;"></div>
+                            <div class="dsr-card-body text-center py-4">
+                                <i class="bi bi-file-earmark-pdf" style="font-size:2.5rem;color:#cbd5e1;"></i>
+                                <p class="mt-2 mb-0" style="font-size:.85rem;color:#94a3b8;">Slides PDF <span class="badge-soon">Em breve</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dsr-card coming-soon">
+                            <div class="card-stripe" style="background:#e2e8f0;"></div>
+                            <div class="dsr-card-body text-center py-4">
+                                <i class="bi bi-book" style="font-size:2.5rem;color:#cbd5e1;"></i>
+                                <p class="mt-2 mb-0" style="font-size:.85rem;color:#94a3b8;">Bibliografia <span class="badge-soon">Em breve</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dsr-card coming-soon">
+                            <div class="card-stripe" style="background:#e2e8f0;"></div>
+                            <div class="dsr-card-body text-center py-4">
+                                <i class="bi bi-play-btn" style="font-size:2.5rem;color:#cbd5e1;"></i>
+                                <p class="mt-2 mb-0" style="font-size:.85rem;color:#94a3b8;">V&iacute;deo-aulas <span class="badge-soon">Em breve</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top:70px;">
+
+                <section id="sobre" class="mb-4">
+                    <div class="info-strip">
+                        <p class="mb-3" style="font-weight:700;font-size:1rem;opacity:.8;text-transform:uppercase;letter-spacing:.5px;">
+                            <i class="bi bi-person-badge me-1"></i> Professor
+                        </p>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight:800;font-size:1rem;">Maximiano Eduardo Pereira</div>
+                                <div style="font-size:.82rem;opacity:.75;">Mestre em Sistemas Computacionais</div>
+                            </div>
+                        </div>
+                        <hr style="border-color:rgba(255,255,255,.2);">
+                        <div class="info-item">
+                            <div class="info-label">Institui&ccedil;&atilde;o</div>
+                            <div class="info-value"><i class="bi bi-building me-1"></i>Anhanguera</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Disciplina</div>
+                            <div class="info-value">Desenvolvimento de Solu&ccedil;&otilde;es Remotas</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Ano</div>
+                            <div class="info-value">2026</div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="dsr-card mb-4">
+                    <div class="dsr-card-body">
+                        <p style="font-weight:700;font-size:.95rem;margin-bottom:.75rem;">
+                            <i class="bi bi-list-check text-danger me-1"></i> Ementa
+                        </p>
+                        <ul class="mb-0 ps-3" style="font-size:.87rem;color:#64748b;line-height:2.1;">
+                            <li>Fundamentos do trabalho remoto</li>
+                            <li>Planejamento e gest&atilde;o de projetos</li>
+                            <li>CPM e an&aacute;lise do caminho cr&iacute;tico</li>
+                            <li>PERT e estimativas de tempo</li>
+                            <li>Ferramentas de colabora&ccedil;&atilde;o</li>
+                            <li>Gest&atilde;o de riscos remotos</li>
+                            <li>Entrega e comunica&ccedil;&atilde;o em equipes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="dsr-card">
+                    <div class="dsr-card-body">
+                        <p style="font-weight:700;font-size:.95rem;margin-bottom:.75rem;">
+                            <i class="bi bi-bar-chart-fill text-danger me-1"></i> Progresso do Curso
+                        </p>
+                        <div class="mb-2 d-flex justify-content-between" style="font-size:.83rem;">
+                            <span>Aulas dispon&iacute;veis</span><strong>2 / 4</strong>
+                        </div>
+                        <div class="progress mb-3" style="height:8px;border-radius:4px;">
+                            <div class="progress-bar bg-danger" style="width:50%;border-radius:4px;"></div>
+                        </div>
+                        <div class="mb-2 d-flex justify-content-between" style="font-size:.83rem;">
+                            <span>Aplica&ccedil;&otilde;es</span><strong>1 / 1</strong>
+                        </div>
+                        <div class="progress" style="height:8px;border-radius:4px;">
+                            <div class="progress-bar" style="width:100%;background:#1565c0;border-radius:4px;"></div>
                         </div>
                     </div>
                 </div>
 
             </div>
         </div>
-    </main>
 
-    <footer>
-        &copy; 2026 — Disciplina DSR &nbsp;|&nbsp; Desenvolvimento de Soluções Remotas
-    </footer>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <p class="mb-1"><strong>Desenvolvimento de Solu&ccedil;&otilde;es Remotas</strong> &nbsp;&middot;&nbsp; Prof. <strong>Maximiano Eduardo Pereira</strong></p>
+        <p class="mb-0"><i class="bi bi-building me-1"></i> Anhanguera &nbsp;&middot;&nbsp; &copy; 2026</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.section-nav .nav-link');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                const link = document.querySelector(`.section-nav a[href="#${e.target.id}"]`);
+                if (link) link.classList.add('active');
+            }
+        });
+    }, { threshold: 0.4 });
+    sections.forEach(s => observer.observe(s));
+</script>
 </body>
 </html>
