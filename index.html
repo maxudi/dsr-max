@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSR — Desenvolvimento de Soluções Remotas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        header h1 {
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+        }
+        .card {
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.16);
+        }
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 0.75rem;
+        }
+        .card-aula .card-header {
+            background: linear-gradient(135deg, #b71c1c, #d32f2f);
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.6rem 1rem;
+        }
+        .card-simulador .card-header {
+            background: linear-gradient(135deg, #1565c0, #1976d2);
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.6rem 1rem;
+        }
+        .btn-aula {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .btn-aula:hover {
+            background-color: #b71c1c;
+            color: white;
+        }
+        .btn-simulador {
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .btn-simulador:hover {
+            background-color: #1565c0;
+            color: white;
+        }
+        footer {
+            text-align: center;
+            padding: 1.2rem;
+            font-size: 0.85rem;
+            color: #666;
+            background: rgba(255,255,255,0.6);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="bi bi-pc-display-horizontal me-2"></i>DSR</h1>
+            <p class="mb-0">Desenvolvimento de Soluções Remotas</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+
+                <!-- Aula 01 -->
+                <div class="col-12 col-md-4">
+                    <div class="card card-aula h-100">
+                        <div class="card-header">
+                            <i class="bi bi-journal-bookmark me-1"></i> Aula 01
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <div class="card-icon text-danger">
+                                <i class="bi bi-mortarboard"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Introdução ao DSR</h5>
+                            <p class="card-text text-muted" style="font-size:0.9rem;">
+                                Conceitos fundamentais do desenvolvimento de soluções remotas e seu impacto no mercado atual.
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white border-0 text-center pb-4">
+                            <a href="dsr.html" class="btn btn-aula px-4 py-2">
+                                <i class="bi bi-play-circle me-1"></i> Acessar Aula
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aula 02 -->
+                <div class="col-12 col-md-4">
+                    <div class="card card-aula h-100">
+                        <div class="card-header">
+                            <i class="bi bi-journal-bookmark me-1"></i> Aula 02
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <div class="card-icon text-danger">
+                                <i class="bi bi-diagram-3"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Planejamento e Caminho Crítico</h5>
+                            <p class="card-text text-muted" style="font-size:0.9rem;">
+                                Gestão de tempo, CPM/PERT e análise do caminho crítico em projetos de soluções remotas.
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white border-0 text-center pb-4">
+                            <a href="dsr2.html" class="btn btn-aula px-4 py-2">
+                                <i class="bi bi-play-circle me-1"></i> Acessar Aula
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulador -->
+                <div class="col-12 col-md-4">
+                    <div class="card card-simulador h-100">
+                        <div class="card-header">
+                            <i class="bi bi-cpu me-1"></i> Ferramenta
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <div class="card-icon text-primary">
+                                <i class="bi bi-gear-wide-connected"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Simulador CPM</h5>
+                            <p class="card-text text-muted" style="font-size:0.9rem;">
+                                Simulador interativo para cálculo do Caminho Crítico (CPM) com diagrama de Gantt.
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white border-0 text-center pb-4">
+                            <a href="SIMULADOR_DSR.html" class="btn btn-simulador px-4 py-2">
+                                <i class="bi bi-lightning-charge me-1"></i> Abrir Simulador
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 — Disciplina DSR &nbsp;|&nbsp; Desenvolvimento de Soluções Remotas
+    </footer>
+</body>
+</html>

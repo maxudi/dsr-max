@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Interativo CPM / Caminho Crítico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+        .header-box {
+            background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            margin-bottom: 2rem;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            background: white;
+            margin-bottom: 1.5rem;
+        }
+        .critical-row {
+            background-color: #ffebee !important;
+            font-weight: 600;
+        }
+        .critical-badge {
+            background-color: #d32f2f;
+            color: white;
+        }
+        .non-critical-badge {
+            background-color: #e0e0e0;
+            color: #555;
+        }
+        .gantt-container {
+            overflow-x: auto;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            min-height: 250px;
+        }
+        .gantt-bar {
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .gantt-bar:hover {
+            transform: scaleY(1.1);
+        }
+        .bar-critical {
+            background: linear-gradient(90deg, #d32f2f, #ef5350);
+            box-shadow: 0 2px 5px rgba(211, 47, 47, 0.4);
+        }
+        .bar-normal {
+            background: linear-gradient(90deg, #1976d2, #42a5f5);
+            box-shadow: 0 2px 5px rgba(25, 118, 210, 0.3);
+        }
+        .cpm-node {
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+        }
+        .cpm-node.is-critical {
+            border-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-box text-center">
+        <h2><i class="bi bi-diagram-3-fill"></i> Laboratório: Simulador CPM & Caminho Crítico</h2>
+        <p class="mb-0 text-white-50">Desenvolvimento de Soluções Remotas | Prof. Me. Maximiano Eduardo Pereira</p>
+    </div>
+
+    <div class="container-fluid px-4 pb-5">
+        <div class="row">
+            <!-- Painel Esquerdo: Entrada de Dados -->
+            <div class="col-lg-5">
+                <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0 text-danger"><i class="bi bi-plus-circle"></i> Entrada de Tarefas</h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="loadSampleData()"><i class="bi bi-box-arrow-in-down"></i> Exemplo Pronto</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="clearAll()"><i class="bi bi-trash"></i> Limpar</button>
+                        </div>
+                    </div>
+
+                    <form id="task-form" class="row g-2 mb-3">
+                        <div class="col-3">
+                            <label class="form-label small fw-bold">ID (Código)</label>
+                            <input type="text" class="form-control" id="task-id" placeholder="Ex: A" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Descrição</label>
+                            <input type="text" class="form-control" id="task-desc" placeholder="Ex: Modelar Banco" required>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label small fw-bold">Duração (dias)</label>
+                            <input type="number" class="form-control" id="task-duration" min="1" placeholder="3" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Predecessoras (separadas por vírgula)</label>
+                            <input type="text" class="form-control" id="task-preds" placeholder="Ex: A, B (deixe vazio se for inicial)">
+                        </div>
+                        <div class="col-12 mt-3">
+                            <button type="submit" class="btn btn-danger w-100 fw-bold"><i class="bi bi-node-plus"></i> Inserir / Atualizar Tarefa</button>
+                        </div>
+                    </form>
+
+                    <div class="table-responsive mt-2">
+                        <table class="table table-sm table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Descrição</th>
+                                    <th>Dur.</th>
+                                    <th>Preds</th>
+                                    <th class="text-center">Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="task-input-tbody">
+                                <!-- Preenchido dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel Direito: Resultados Calculados -->
+            <div class="col-lg-7">
+                <!-- Tabela de Resultados CPM -->
+                <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0 text-danger"><i class="bi bi-table"></i> Tabela de Cálculo CPM</h5>
+                        <span id="project-duration-badge" class="badge bg-dark fs-6">Prazo Final: 0 dias</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm text-center align-middle" id="results-table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Duração</th>
+                                    <th>ES (Início Cedo)</th>
+                                    <th>EF (Fim Cedo)</th>
+                                    <th>LS (Início Tarde)</th>
+                                    <th>LF (Fim Tarde)</th>
+                                    <th>Folga Total (FT)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cpm-results-tbody">
+                                <tr><td colspan="8" class="text-muted py-3">Adicione tarefas para calcular a rede.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-danger mt-2 py-2 d-none" id="critical-path-summary">
+                        <strong><i class="bi bi-exclamation-triangle-fill"></i> Caminho Crítico: </strong><span id="critical-path-sequence">-</span>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Gantt Visual -->
+                <div class="card card-custom p-4">
+                    <h5 class="fw-bold mb-3 text-danger"><i class="bi bi-bar-chart-steps"></i> Gráfico de Gantt Interativo</h5>
+                    <div class="gantt-container" id="gantt-wrapper">
+                        <div class="text-muted text-center py-4">O cronograma visual aparecerá aqui após o cálculo.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tasks = [];
+
+        const defaultSample = [
+            { id: 'A', desc: 'Arquitetura de Dados', duration: 3, preds: [] },
+            { id: 'B', desc: 'Desenvolvimento API', duration: 5, preds: ['A'] },
+            { id: 'C', desc: 'Prototipagem UI/UX', duration: 2, preds: ['A'] },
+            { id: 'D', desc: 'Integração Frontend', duration: 4, preds: ['B', 'C'] },
+            { id: 'E', desc: 'Homologação e Deploy', duration: 2, preds: ['D'] }
+        ];
+
+        document.getElementById('task-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('task-id').value.trim().toUpperCase();
+            const desc = document.getElementById('task-desc').value.trim();
+            const duration = parseInt(document.getElementById('task-duration').value, 10);
+            const predsRaw = document.getElementById('task-preds').value.trim();
+            
+            const preds = predsRaw ? predsRaw.split(',').map(p => p.trim().toUpperCase()).filter(p => p.length > 0) : [];
+
+            if (preds.includes(id)) {
+                alert('Uma tarefa não pode ser predecessora de si mesma!');
+                return;
+            }
+
+            const existingIndex = tasks.findIndex(t => t.id === id);
+            if (existingIndex >= 0) {
+                tasks[existingIndex] = { id, desc, duration, preds };
+            } else {
+                tasks.push({ id, desc, duration, preds });
+            }
+
+            document.getElementById('task-form').reset();
+            renderInputTable();
+            calculateCPM();
+        });
+
+        function renderInputTable() {
+            const tbody = document.getElementById('task-input-tbody');
+            tbody.innerHTML = '';
+
+            tasks.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${t.id}</strong></td>
+                    <td>${t.desc}</td>
+                    <td>${t.duration}d</td>
+                    <td><span class="badge bg-light text-dark border">${t.preds.length > 0 ? t.preds.join(', ') : 'Início'}</span></td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="removeTask('${t.id}')">&times;</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function removeTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            // Limpa dependências quebradas
+            tasks.forEach(t => {
+                t.preds = t.preds.filter(p => p !== id);
+            });
+            renderInputTable();
+            calculateCPM();
+        }
+
+        function clearAll() {
+            tasks = [];
+            renderInputTable();
+            calculateCPM();
+        }
+
+        function loadSampleData() {
+            tasks = JSON.parse(JSON.stringify(defaultSample));
+            renderInputTable();
+            calculateCPM();
+        }
+
+        function calculateCPM() {
+            const resultsTbody = document.getElementById('cpm-results-tbody');
+            const summaryDiv = document.getElementById('critical-path-summary');
+            const durationBadge = document.getElementById('project-duration-badge');
+            
+            if (tasks.length === 0) {
+                resultsTbody.innerHTML = '<tr><td colspan="8" class="text-muted py-3">Adicione tarefas para calcular a rede.</td></tr>';
+                document.getElementById('gantt-wrapper').innerHTML = '<div class="text-muted text-center py-4">O cronograma visual aparecerá aqui após o cálculo.</div>';
+                summaryDiv.classList.add('d-none');
+                durationBadge.textContent = 'Prazo Final: 0 dias';
+                return;
+            }
+
+            // Mapa para cálculo
+            const taskMap = {};
+            tasks.forEach(t => {
+                taskMap[t.id] = {
+                    ...t,
+                    ES: 0,
+                    EF: 0,
+                    LS: Infinity,
+                    LF: Infinity,
+                    slack: 0,
+                    isCritical: false,
+                    successors: []
+                };
+            });
+
+            // Mapear sucessores
+            tasks.forEach(t => {
+                t.preds.forEach(pId => {
+                    if (taskMap[pId]) {
+                        taskMap[pId].successors.push(t.id);
+                    }
+                });
+            });
+
+            // 1. FORWARD PASS (Passo para frente)
+            let changed = true;
+            let iterations = 0;
+            const maxIter = tasks.length * 2;
+
+            while (changed && iterations < maxIter) {
+                changed = false;
+                iterations++;
+                tasks.forEach(t => {
+                    const node = taskMap[t.id];
+                    let maxEF = 0;
+                    node.preds.forEach(pId => {
+                        if (taskMap[pId] && taskMap[pId].EF > maxEF) {
+                            maxEF = taskMap[pId].EF;
+                        }
+                    });
+                    const newES = maxEF;
+                    const newEF = newES + node.duration;
+                    if (newES !== node.ES || newEF !== node.EF) {
+                        node.ES = newES;
+                        node.EF = newEF;
+                        changed = true;
+                    }
+                });
+            }
+
+            // Duração total do projeto
+            let totalProjectDuration = 0;
+            Object.values(taskMap).forEach(n => {
+                if (n.EF > totalProjectDuration) totalProjectDuration = n.EF;
+            });
+
+            // 2. BACKWARD PASS (Passo para trás)
+            Object.values(taskMap).forEach(node => {
+                if (node.successors.length === 0) {
+                    node.LF = totalProjectDuration;
+                    node.LS = node.LF - node.duration;
+                }
+            });
+
+            changed = true;
+            iterations = 0;
+            while (changed && iterations < maxIter) {
+                changed = false;
+                iterations++;
+                tasks.forEach(t => {
+                    const node = taskMap[t.id];
+                    if (node.successors.length > 0) {
+                        let minLS = Infinity;
+                        node.successors.forEach(sId => {
+                            if (taskMap[sId] && taskMap[sId].LS < minLS) {
+                                minLS = taskMap[sId].LS;
+                            }
+                        });
+                        if (minLS !== Infinity) {
+                            const newLF = minLS;
+                            const newLS = newLF - node.duration;
+                            if (newLF !== node.LF || newLS !== node.LS) {
+                                node.LF = newLF;
+                                node.LS = newLS;
+                                changed = true;
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 3. CÁLCULO DE FOLGAS & CAMINHO CRÍTICO
+            const criticalPathTasks = [];
+            Object.values(taskMap).forEach(node => {
+                node.slack = node.LS - node.ES;
+                node.isCritical = (node.slack === 0);
+                if (node.isCritical) criticalPathTasks.push(node.id);
+            });
+
+            // Renderizar Tabela de Resultados
+            resultsTbody.innerHTML = '';
+            tasks.forEach(t => {
+                const node = taskMap[t.id];
+                const tr = document.createElement('tr');
+                if (node.isCritical) tr.classList.add('critical-row');
+
+                tr.innerHTML = `
+                    <td><strong>${node.id}</strong></td>
+                    <td>${node.duration}d</td>
+                    <td>${node.ES}</td>
+                    <td>${node.EF}</td>
+                    <td>${node.LS}</td>
+                    <td>${node.LF}</td>
+                    <td><strong>${node.slack}</strong></td>
+                    <td>
+                        <span class="badge ${node.isCritical ? 'critical-badge' : 'non-critical-badge'}">
+                            ${node.isCritical ? 'CRÍTICA' : 'Normal'}
+                        </span>
+                    </td>
+                `;
+                resultsTbody.appendChild(tr);
+            });
+
+            durationBadge.textContent = `Prazo Final: ${totalProjectDuration} dias`;
+            summaryDiv.classList.remove('d-none');
+            document.getElementById('critical-path-sequence').textContent = criticalPathTasks.join(' ➔ ');
+
+            renderGantt(taskMap, totalProjectDuration);
+        }
+
+        function renderGantt(taskMap, totalDuration) {
+            const container = document.getElementById('gantt-wrapper');
+            container.innerHTML = '';
+
+            if (totalDuration === 0) return;
+
+            const table = document.createElement('table');
+            table.className = 'w-100 text-center';
+            table.style.borderCollapse = 'collapse';
+
+            // Cabeçalho de Dias
+            let headerHTML = '<thead><tr><th style="width: 120px; text-align: left; padding: 4px;">Atividade</th>';
+            for (let day = 1; day <= totalDuration; day++) {
+                headerHTML += `<th style="border-left: 1px solid #e0e0e0; font-size: 0.75rem; padding: 4px; color: #888;">D${day}</th>`;
+            }
+            headerHTML += '</tr></thead><tbody>';
+
+            // Linhas do Gantt
+            tasks.forEach(t => {
+                const node = taskMap[t.id];
+                headerHTML += `<tr>
+                    <td style="text-align: left; font-weight: bold; font-size: 0.85rem; padding: 8px 4px;">
+                        ${node.id} (${node.duration}d)
+                    </td>`;
+
+                for (let day = 0; day < totalDuration; day++) {
+                    const isInside = day >= node.ES && day < node.EF;
+                    const isStart = day === node.ES;
+
+                    if (isStart) {
+                        const colspan = node.duration;
+                        const barClass = node.isCritical ? 'bar-critical' : 'bar-normal';
+                        headerHTML += `
+                            <td colspan="${colspan}" style="padding: 4px; vertical-align: middle;">
+                                <div class="gantt-bar ${barClass}" title="ES: ${node.ES}, EF: ${node.EF}, Folga: ${node.slack}d">
+                                    ${node.id}: ${node.desc}
+                                </div>
+                            </td>`;
+                        day += colspan - 1; // Pula as células ocupadas
+                    } else if (!isInside) {
+                        headerHTML += `<td style="border-left: 1px solid #f0f0f0; background: ${day % 2 === 0 ? '#fafafa' : '#fff'};"></td>`;
+                    }
+                }
+                headerHTML += '</tr>';
+            });
+
+            headerHTML += '</tbody>';
+            table.innerHTML = headerHTML;
+            container.appendChild(table);
+        }
+
+        // Inicia carregando o exemplo de software
+        window.addEventListener('DOMContentLoaded', loadSampleData);
+    </script>
+</body>
+</html>

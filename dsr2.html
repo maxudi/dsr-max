@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 02: Planejamento, Tempo e Caminho Crítico em Soluções Remotas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container-aula {
+            max-width: 950px;
+            margin: 2rem auto;
+            background-color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            transition: background-color 0.3s;
+        }
+        .slide {
+            display: none;
+            animation: fadeIn 0.6s ease-in-out;
+            min-height: 520px;
+        }
+        .slide.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .slide h2 {
+            color: #b71c1c;
+            font-weight: 700;
+            border-bottom: 4px solid #d32f2f;
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+        img.slide-image {
+            max-height: 300px;
+            width: auto;
+            max-width: 100%;
+            margin: 1.5rem auto;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            object-fit: contain;
+        }
+        .navigation-bar {
+            border-top: 1px solid #ddd;
+            padding-top: 1.5rem;
+        }
+        .btn-custom {
+            background-color: #d32f2f;
+            border-color: #d32f2f;
+            color: white;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn-custom:hover {
+            background-color: #b71c1c;
+            border-color: #b71c1c;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .quiz-question {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #d32f2f;
+        }
+        .result-box {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-weight: 500;
+            animation: fadeIn 0.4s;
+        }
+        .correct-answer {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            color: #2e7d32;
+        }
+        .wrong-answer {
+            background-color: #ffcdd2;
+            border-left: 5px solid #f44336;
+            color: #c62828;
+        }
+        .form-check.correct .form-check-label {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .highlight-box {
+            background-color: #ffebee;
+            border-left: 5px solid #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+        
+        /* Estilos para o PDF Vibrante */
+        .pdf-capture-mode {
+            background-color: #263238 !important;
+            color: white !important;
+        }
+        .pdf-capture-mode h2, .pdf-capture-mode .lead, .pdf-capture-mode p, .pdf-capture-mode li, .pdf-capture-mode strong, .pdf-capture-mode div, .pdf-capture-mode span, .pdf-capture-mode th, .pdf-capture-mode td {
+            color: white !important;
+        }
+        .pdf-capture-mode h2 {
+            border-bottom-color: #ef5350 !important;
+        }
+        .pdf-capture-mode .highlight-box, .pdf-capture-mode .card {
+            background-color: #37474f;
+            border-left-color: #ef5350;
+        }
+        .pdf-capture-mode .table-dark {
+             background-color: #d32f2f !important;
+             border-color: #d32f2f !important;
+        }
+         .pdf-capture-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
+            --bs-table-accent-bg: rgba(255, 255, 255, 0.05);
+        }
+        .pdf-capture-mode .text-muted {
+            color: #cfd8dc !important;
+        }
+        .pdf-capture-mode .quiz-question, .pdf-capture-mode .correct-answer, .pdf-capture-mode .wrong-answer {
+             color: #212529 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-aula">
+        <div class="text-center mb-5">
+            <h1 class="display-5" style="color: #b71c1c;">Desenvolvimento de Soluções Remotas</h1>
+            <p class="lead text-muted">AULA 02: Planejamento, Sequenciamento, Caminho Crítico (CPM/PERT) e Gantt</p>
+        </div>
+        <div id="slides-container"></div>
+        <div class="d-flex justify-content-between align-items-center mt-4 navigation-bar">
+            <button class="btn btn-outline-secondary rounded-pill px-4" id="prev-slide">&larr; Anterior</button>
+            <span id="slide-counter" class="text-muted fw-bold" aria-live="polite"></span>
+            <button class="btn btn-custom" id="next-slide">Avançar &rarr;</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageBaseUrl = "https://eduadmin.netminas.com/disciplinas/1/a1bd6c652d4b30464db1dd71630e2a4d/imagens/";
+            const usedImageNumbers = new Set();
+            function getRandomImageUrl() {
+                let randomNum;
+                if (usedImageNumbers.size >= 30) { usedImageNumbers.clear(); }
+                do { randomNum = Math.floor(Math.random() * 30) + 1; } while (usedImageNumbers.has(randomNum));
+                usedImageNumbers.add(randomNum);
+                return `${imageBaseUrl}${randomNum}.jpg`;
+            }
+            
+            const slidesContent = [
+                // 1
+                { 
+                    title: '<i class="bi bi-clock-history"></i> Planejamento Estruturado em Ambientes Remotos', 
+                    content: `<p class="mt-4 fs-5">Seja no desenvolvimento tradicional ou ágil, <strong>entender dependências e gerenciar o tempo</strong> é a chave para evitar gargalos invisíveis em equipes geograficamente distribuídas.</p>
+                    <div class="highlight-box">
+                        <p class="mb-0 fs-5">No trabalho remoto, atrasos não percebidos no início acumulam-se silenciosamente até estourarem prazos críticos no final.</p>
+                    </div>
+                    <p class="mt-4">Nesta aula vamos dissecar a engenharia de planejamento: desde a decomposição do trabalho até o cálculo do Caminho Crítico e visualização em Gantt.</p>
+                    <div class="card mt-4"><div class="card-body">
+                        <h5 class="card-title">Professor</h5><p class="card-text">Me. Maximiano Eduardo Pereira</p>
+                        <h5 class="card-title">Instituição</h5><p class="card-text">Faculdade Anhanguera Uberlândia</p>
+                    </div></div>` 
+                },
+                // 2
+                { 
+                    title: '<i class="bi bi-flag-fill"></i> Objetivos da Aula 02', 
+                    content: `<p>Ao concluir esta aula você será capaz de:</p>
+                    <ul>
+                        <li>Construir e aplicar a <strong>Estrutura Analítica do Projeto (EAP / WBS)</strong> para decomposição de software.</li>
+                        <li>Mapear dependências usando os 4 tipos de relacionamentos do <strong>PDM</strong>.</li>
+                        <li>Calcular durações estimadas com a fórmula de 3 pontos do <strong>PERT</strong>.</li>
+                        <li>Identificar o <strong>Caminho Crítico (CPM)</strong> e calcular folgas de atividades (Early/Late Start & Finish).</li>
+                        <li>Estruturar e interpretar cronogramas visuais em <strong>Gráficos de Gantt</strong> em ferramentas modernas de gestão remota.</li>
+                    </ul>` 
+                },
+                // 3
+                { 
+                    title: '<i class="bi bi-diagram-3"></i> Decomposição do Trabalho: EAP / WBS', 
+                    content: `<p>A <strong>Estrutura Analítica do Projeto (EAP)</strong>, ou <em>Work Breakdown Structure (WBS)</em>, é a divisão hierárquica e orientada a entregáveis de todo o escopo do projeto.</p>
+                    <ul>
+                        <li><strong>100% Rule:</strong> A EAP deve conter 100% do trabalho definido pelo escopo — nem mais, nem menos.</li>
+                        <li><strong>Pacotes de Trabalho (Work Packages):</strong> O nível mais baixo da decomposição, com duração e custo mensuráveis e um responsável claramente atribuído.</li>
+                        <li><strong>Prevenção de Escopo Fantasma:</strong> Reduz drasticamente a ambiguidade em times remotos ao definir fronteiras de entrega.</li>
+                    </ul>`,
+                    image: getRandomImageUrl()
+                },
+                // 4
+                { 
+                    title: '<i class="bi bi-boxes"></i> Exemplo Prático de EAP para Software', 
+                    content: `<p>Estrutura hierárquica típica para uma solução remota de API e Frontend:</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Nível 1 (Projeto)</th>
+                                    <th>Nível 2 (Módulo)</th>
+                                    <th>Nível 3 (Pacote de Trabalho)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="4"><strong>Sistema E-Commerce Remoto</strong></td>
+                                    <td rowspan="2">1.1 Módulo de Autenticação</td>
+                                    <td>1.1.1 Configuração de OAuth2/JWT</td>
+                                </tr>
+                                <tr>
+                                    <td>1.1.2 Telas de Login e Recuperação</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">1.2 Catálogo de Produtos</td>
+                                    <td>1.2.1 API de Busca e Filtros</td>
+                                </tr>
+                                <tr>
+                                    <td>1.2.2 Interface Responsiva de Grid</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>` 
+                },
+                // 5
+                { 
+                    title: '<i class="bi bi-bezier2"></i> Mapeamento de Precedências (PDM)', 
+                    content: `<p>O <strong>Precedence Diagramming Method (PDM)</strong> define como os pacotes de trabalho se conectam temporalmente:</p>
+                    <ul>
+                        <li><strong>Término para Início (FS - Finish-to-Start):</strong> B só começa após A terminar. <em>(Mais comum: Criar o banco antes de popular dados)</em>.</li>
+                        <li><strong>Início para Início (SS - Start-to-Start):</strong> B começa após A iniciar. <em>(Ex: Testes automatizados iniciam logo após o início do desenvolvimento)</em>.</li>
+                        <li><strong>Término para Término (FF - Finish-to-Finish):</strong> B só termina quando A terminar. <em>(Ex: Documentação encerra junto com o fechamento da sprint)</em>.</li>
+                        <li><strong>Início para Término (SF - Start-to-Finish):</strong> B só termina após A iniciar. <em>(Raro: Transição de turnos de suporte 24/7)</em>.</li>
+                    </ul>` 
+                },
+                // 6
+                { 
+                    title: '<i class="bi bi-hourglass-split"></i> Latências: Avanços (Lead) e Atrasos (Lag)', 
+                    content: `<p>Além das relações diretas, os vínculos podem conter tempos de espera ou sobreposição:</p>
+                    <div class="highlight-box">
+                        <p class="mb-2"><strong>Lag (Espera / Atraso):</strong> Tempo de espera forçado entre tarefas. Exemplo: Aguardar 24h após deploy em homologação para coletar telemetria antes de iniciar homologação final.</p>
+                        <p class="mb-0"><strong>Lead (Avanço / Aceleração):</strong> Antecipação do início da tarefa sucessora antes da conclusão da predecessora. Exemplo: Iniciar redação da documentação 2 dias antes do término da codificação.</p>
+                    </div>
+                    <p class="mt-3">Ajustar leads e lags permite paralelizar trabalho sem sobrecarregar a infraestrutura.</p>` 
+                },
+                // 7
+                { 
+                    title: '<i class="bi bi-calculator"></i> Estimativas de 3 Pontos (PERT)', 
+                    content: `<p>Estimar software remotamente é desafiador devido a incertezas de ambiente e escopo. O método <strong>PERT</strong> calcula a duração esperada ($T_e$) através de média ponderada:</p>
+                    <ul>
+                        <li><strong>Otimista ($O$):</strong> Melhor cenário possível, sem impedimentos.</li>
+                        <li><strong>Mais Provável ($M$):</strong> Cenário realista com o ritmo normal da equipe.</li>
+                        <li><strong>Pessimista ($P$):</strong> Pior cenário, com problemas de infraestrutura ou bugs complexos.</li>
+                    </ul>
+                    <div class="highlight-box text-center">
+                        <h4 class="mb-0">Fórmula PERT: <strong>$T_e = \frac{O + 4M + P}{6}$</strong></h4>
+                    </div>` 
+                },
+                // 8
+                { 
+                    title: '<i class="bi bi-pencil-square"></i> Exemplo de Cálculo PERT', 
+                    content: `<p>Considere o desenvolvimento de um microsserviço de pagamentos remotos:</p>
+                    <ul>
+                        <li>Estimativa Otimista ($O$): <strong>3 dias</strong></li>
+                        <li>Estimativa Mais Provável ($M$): <strong>6 dias</strong></li>
+                        <li>Estimativa Pessimista ($P$): <strong>15 dias</strong></li>
+                    </ul>
+                    <div class="card p-3 bg-light mt-3">
+                        <p class="mb-1"><strong>Aplicação:</strong></p>
+                        <p class="mb-1">$T_e = \frac{3 + (4 \times 6) + 15}{6}$</p>
+                        <p class="mb-1">$T_e = \frac{3 + 24 + 15}{6} = \frac{42}{6}$</p>
+                        <p class="mb-0 text-success fw-bold fs-5">Duração Esperada ($T_e$) = 7 dias</p>
+                    </div>
+                    <p class="mt-3 text-muted">Note como a cauda pessimista puxa a estimativa de 6 para 7 dias, protegendo o time contra riscos.</p>` 
+                },
+                // 9
+                { 
+                    title: '<i class="bi bi-signpost-split-fill"></i> O Método do Caminho Crítico (CPM)', 
+                    content: `<p>O <strong>Caminho Crítico</strong> é a sequência de atividades dependentes que determina a <strong>duração total mínima</strong> do projeto.</p>
+                    <ul>
+                        <li>Se qualquer tarefa do caminho crítico atrasar 1 hora, a entrega final atrasa 1 hora.</li>
+                        <li><strong>Folga Total (Total Float) = 0:</strong> Atividades críticas não possuem margem de erro temporal.</li>
+                        <li>Um projeto pode ter mais de um caminho crítico simultaneamente.</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p class="mb-0">Em times remotos distribuídos por fusos horários, os membros alocados no Caminho Crítico devem ter seus impedimentos removidos como prioridade absoluta!</p>
+                    </div>`,
+                    image: getRandomImageUrl()
+                },
+                // 10
+                { 
+                    title: '<i class="bi bi-node-plus"></i> Anatomia de um Bloco de Atividade CPM', 
+                    content: `<p>Para calcular o CPM, cada atividade é representada com 6 parâmetros fundamentais:</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 33%;">Início Mais Cedo (ES)</th>
+                                    <th style="width: 34%;">Duração (D)</th>
+                                    <th style="width: 33%;">Término Mais Cedo (EF)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-light fw-bold">
+                                    <td colspan="3" class="py-3 fs-5 text-danger">NOME DA ATIVIDADE</td>
+                                </tr>
+                                <tr class="table-secondary">
+                                    <td><strong>Início Mais Tarde (LS)</strong></td>
+                                    <td><strong>Folga (Slack = LS - ES)</strong></td>
+                                    <td><strong>Término Mais Tarde (LF)</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted mt-2">ES: Early Start | EF: Early Finish | LS: Late Start | LF: Late Finish</p>` 
+                },
+                // 11
+                { 
+                    title: '<i class="bi bi-arrow-right-circle-fill"></i> Passo Para Frente (Forward Pass)', 
+                    content: `<p>O cálculo para frente determina as datas <strong>mais cedo</strong> ($ES$ e $EF$) em que as tarefas podem ocorrer:</p>
+                    <ol>
+                        <li>Início do projeto: $ES = 0$.</li>
+                        <li>Para cada tarefa: <strong>$EF = ES + Duração$</strong>.</li>
+                        <li>Quando uma tarefa tem múltiplas predecessoras, seu $ES$ será o <strong>MAIOR $EF$</strong> entre todas elas.</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <p class="mb-0"><strong>Regra de Ouro do Forward Pass:</strong> Na convergência de tarefas, escolha sempre o <em>maior valor</em> de término anterior.</p>
+                    </div>` 
+                },
+                // 12
+                { 
+                    title: '<i class="bi bi-arrow-left-circle-fill"></i> Passo Para Trás (Backward Pass)', 
+                    content: `<p>O cálculo para trás determina as datas <strong>mais tarde</strong> ($LF$ e $LS$) sem atrasar a data de entrega final:</p>
+                    <ol>
+                        <li>Última atividade: $LF = EF$ final do projeto.</li>
+                        <li>Para cada tarefa: <strong>$LS = LF - Duração$</strong>.</li>
+                        <li>Quando uma tarefa antecede múltiplas sucessoras, seu $LF$ será o <strong>MENOR $LS$</strong> entre todas elas.</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <p class="mb-0"><strong>Regra de Ouro do Backward Pass:</strong> No retorno, na bifurcação de dependências, escolha sempre o <em>menor valor</em> de início posterior.</p>
+                    </div>` 
+                },
+                // 13
+                { 
+                    title: '<i class="bi bi-pause-circle-fill"></i> Cálculo de Folgas (Slack / Float)', 
+                    content: `<p>A folga indica quanto tempo uma tarefa pode atrasar sem comprometer o projeto:</p>
+                    <ul>
+                        <li><strong>Folga Total ($FT$):</strong> Tempo máximo que uma atividade pode atrasar sem impactar o prazo final.
+                            <br><code>$FT = LS - ES$</code> ou <code>$FT = LF - EF$</code></li>
+                        <li class="mt-3"><strong>Folga Livre ($FL$):</strong> Tempo que uma atividade pode atrasar sem impactar o início mais cedo ($ES$) da sua sucessora imediata.</li>
+                    </ul>
+                    <div class="card bg-light p-3 mt-3">
+                        <p class="mb-0"><strong>Conclusão Técnica:</strong> Se $FT = 0$, a atividade pertence obrigatoriamente ao <strong>Caminho Crítico</strong>.</p>
+                    </div>` 
+                },
+                // 14
+                { 
+                    title: '<i class="bi bi-table"></i> Exemplo Completo de Rede de Atividades', 
+                    content: `
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Atividade</th>
+                                    <th>Descrição</th>
+                                    <th>Predecessora</th>
+                                    <th>Duração</th>
+                                    <th>Caminho Crítico?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>A</strong></td><td>Arquitetura de Dados</td><td>-</td><td>3 dias</td><td class="text-danger fw-bold">Sim (Crítica)</td></tr>
+                                <tr><td><strong>B</strong></td><td>Desenvolvimento da API</td><td>A</td><td>5 dias</td><td class="text-danger fw-bold">Sim (Crítica)</td></tr>
+                                <tr><td><strong>C</strong></td><td>Prototipagem UI/UX</td><td>A</td><td>2 dias</td><td>Não (Folga = 3d)</td></tr>
+                                <tr><td><strong>D</strong></td><td>Integração Front-End</td><td>B, C</td><td>4 dias</td><td class="text-danger fw-bold">Sim (Crítica)</td></tr>
+                                <tr><td><strong>E</strong></td><td>Homologação e Deploy</td><td>D</td><td>2 dias</td><td class="text-danger fw-bold">Sim (Crítica)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted">Caminho Crítico: <strong>A &rarr; B &rarr; D &rarr; E</strong> (Duração Total = 3 + 5 + 4 + 2 = <strong>14 dias</strong>).</p>` 
+                },
+                // 15
+                { 
+                    title: '<i class="bi bi-bar-chart-line-fill"></i> O Gráfico de Gantt no Cotidiano Remoto', 
+                    content: `<p>O Gráfico de Gantt traduz a complexidade da rede lógica em um calendário visual:</p>
+                    <ul>
+                        <li><strong>Eixo Horizontal:</strong> Linha do tempo (dias, semanas, sprints).</li>
+                        <li><strong>Eixo Vertical:</strong> Lista de tarefas, marcos (milestones) e responsáveis.</li>
+                        <li><strong>Barras Horizontais:</strong> Comprimento proporcional à duração estimada.</li>
+                        <li><strong>Linhas de Conexão:</strong> Indicam as dependências PDM em tempo real.</li>
+                    </ul>
+                    <div class="highlight-box">
+                        <p class="mb-0">Para desenvolvedores remotos, o Gantt elimina a pergunta "O que devo começar a fazer agora?" e explicita quem está bloqueando quem.</p>
+                    </div>`,
+                    image: getRandomImageUrl()
+                },
+                // 16
+                { 
+                    title: '<i class="bi bi-tools"></i> Ferramentas Remotas de Gantt e Cronograma', 
+                    content: `<p>Plataformas que automatizam o vínculo entre tarefas, CPM e visualização em Gantt:</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Ferramenta</th>
+                                    <th>Ponto Forte no Remoto</th>
+                                    <th>Uso Principal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Jira Software</strong></td>
+                                    <td>Roadmaps avançados integrados a repositórios Git</td>
+                                    <td>Times de engenharia e Sprints</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ClickUp / Monday.com</strong></td>
+                                    <td>Cálculo automático de caminho crítico visual</td>
+                                    <td>Gestão híbrida de produto e operações</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Azure DevOps</strong></td>
+                                    <td>Rastreabilidade direta de épicos a Pull Requests</td>
+                                    <td>Ambientes corporativos e CI/CD</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>` 
+                },
+                // 17
+                { 
+                    title: '<i class="bi bi-lightning-charge"></i> Técnicas de Compressão de Cronograma', 
+                    content: `<p>Quando o projeto remoto precisa ser entregue antes do prazo planejado:</p>
+                    <ol>
+                        <li><strong>Crashing (Compressão de Custos):</strong> Adicionar recursos pontuais nas atividades <em>estritamente críticas</em> (ex: horas extras, contratação temporária). Aumenta custos.</li>
+                        <li class="mt-3"><strong>Fast-Tracking (Paralelismo / Execução Rápida):</strong> Executar atividades simultaneamente que seriam feitas em sequência (ex: começar a codificar antes do design final ser aprovado). Aumenta riscos e retrabalho.</li>
+                    </ol>
+                    <div class="highlight-box">
+                        <p class="mb-0"><strong>Atenção:</strong> Fazer compressão em tarefas fora do caminho crítico gera custo sem reduzir 1 dia do prazo final!</p>
+                    </div>` 
+                },
+                // 18
+                { 
+                    title: '<i class="bi bi-exclamation-octagon-fill"></i> A Lei de Brooks no Trabalho Remoto', 
+                    content: `<div class="highlight-box text-center">
+                        <p class="fs-4 mb-2">“Adicionar mão de obra a um projeto de software atrasado torna-o ainda mais atrasado.”</p>
+                        <p class="mb-0">— Fred Brooks (The Mythical Man-Month)</p>
+                    </div>
+                    <p class="mt-4">Por que isso acontece em ambientes remotos?</p>
+                    <ul>
+                        <li><strong>Custo de Onboarding:</strong> Desenvolvedores seniores gastam tempo ensinando os novatos.</li>
+                        <li><strong>Explosão de Canais de Comunicação:</strong> O número de canais cresce quadraticamente: $N(N-1)/2$.</li>
+                        <li><strong>Fragmentação de Contexto:</strong> Dificuldade em sincronizar decisões em fusos horários diferentes.</li>
+                    </ul>` 
+                },
+                // 19
+                { 
+                    title: '<i class="bi bi-shuffle"></i> Integração: Planejamento Tradicional vs. Ágil', 
+                    content: `<p>Como conciliar Gantt/CPM com Sprints e Backlogs remotos?</p>
+                    <ul>
+                        <li><strong>Planejamento em Onda Sucessiva (Rolling Wave Planning):</strong> Planejamento detalhado das próximas 2 a 3 sprints e macro-planejamento em marcos (Milestones) para o restante.</li>
+                        <li><strong>Roadmaps Baseados em Metas:</strong> O Gantt acompanha entregas de valor de negócio (Releases/Epics), enquanto o Kanban/Scrum gerencia as tarefas diárias.</li>
+                    </ul>
+                    <div class="card p-3 bg-light mt-3">
+                        <p class="mb-0">O caminho crítico do Roadmap indica quais <em>Features</em> dependem de arquiteturas estruturais prévias.</p>
+                    </div>` 
+                },
+                // 20
+                { 
+                    title: '<i class="bi bi-check2-square"></i> Resumo da Aula 02', 
+                    content: `<p>Hoje consolidamos os pilares do gerenciamento de tempo:</p>
+                    <ul>
+                        <li>A <strong>EAP/WBS</strong> decompõe o escopo em partes gerenciáveis até os pacotes de trabalho.</li>
+                        <li>O <strong>PDM</strong> mapeia relações lógicas de dependência (FS, SS, FF, SF) com lags e leads.</li>
+                        <li>A fórmula <strong>PERT</strong> calcula a duração estimada balanceando otimismo e pessimismo.</li>
+                        <li>O <strong>Caminho Crítico (CPM)</strong> aponta onde nenhum atraso é tolerado ($Folga = 0$).</li>
+                        <li>O <strong>Gantt</strong> proporciona visibilidade transparente para alinhar desenvolvedores distribuídos.</li>
+                    </ul>
+                    <p class="lead text-center mt-4">Chegou a hora de validar sua compreensão no Quiz!</p>` 
+                },
+                // 21 - Quiz
+                {
+                    title: '<i class="bi bi-patch-question-fill"></i> Teste seus Conhecimentos - Aula 02',
+                    content: `
+                        <form id="quiz-form">
+                            <div class="quiz-question">
+                                <p><strong>1. O que caracteriza uma atividade que pertence ao Caminho Crítico (CPM)?</strong></p>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="a"><label>a) Ter a menor duração do projeto</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="b"><label>b) Ter Folga Total igual a zero ($FT = 0$)</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="c"><label>c) Não possuir nenhuma atividade predecessora</label></div>
+                                <div id="result-q1" class="mt-2"></div>
+                            </div>
+                            <div class="quiz-question">
+                                <p><strong>2. Na fórmula PERT ($T_e = \frac{O + 4M + P}{6}$), qual estimativa recebe o maior peso?</strong></p>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="a"><label>a) Estimativa Pessimista ($P$)</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="b"><label>b) Estimativa Mais Provável ($M$)</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="c"><label>c) Estimativa Otimista ($O$)</label></div>
+                                <div id="result-q2" class="mt-2"></div>
+                            </div>
+                            <div class="quiz-question">
+                                <p><strong>3. Durante o Passo Para Frente (Forward Pass), quando uma tarefa possui múltiplas predecessoras, seu Início Mais Cedo (ES) será:</strong></p>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="a"><label>a) O maior Término Mais Cedo (EF) entre suas predecessoras</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="b"><label>b) O menor Término Mais Cedo (EF) entre suas predecessoras</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="c"><label>c) A média de todas as durações anteriores</label></div>
+                                <div id="result-q3" class="mt-2"></div>
+                            </div>
+                            <div class="quiz-question">
+                                <p><strong>4. Qual tipo de dependência PDM representa o cenário onde uma tarefa só pode começar após o término da anterior?</strong></p>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="a"><label>a) Start-to-Start (SS)</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="b"><label>b) Finish-to-Start (FS)</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="c"><label>c) Finish-to-Finish (FF)</label></div>
+                                <div id="result-q4" class="mt-2"></div>
+                            </div>
+                            <div class="quiz-question">
+                                <p><strong>5. Segundo a Lei de Brooks, por que adicionar mais desenvolvedores a um projeto atrasado pode atrasá-lo ainda mais?</strong></p>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="a"><label>a) Porque o salário dos novos membros reduz o orçamento</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="b"><label>b) Devido ao tempo de onboarding/treinamento e explosão de canais de comunicação</label></div>
+                                <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="c"><label>c) Porque o código é apagado automaticamente ao incluir novos membros</label></div>
+                                <div id="result-q5" class="mt-2"></div>
+                            </div>
+                            <button type="button" class="btn btn-success me-2" id="submit-quiz"><i class="bi bi-check-lg"></i> Verificar Respostas</button>
+                        </form>
+                    `
+                },
+                // 22 - Fim
+                {
+                    title: '<i class="bi bi-award-fill"></i> Fim da Aula 02',
+                    content: `<p class="fs-5">Excelente trabalho! Você concluiu a Aula 02 de Planejamento e Gestão de Tempo em Soluções Remotas.</p>
+                    <p>Com as ferramentas de EAP, PDM, CPM e Gantt, você tem a estrutura necessária para manter a previsibilidade e visibilidade das entregas mesmo com times 100% remotos.</p>
+                    <p>Na próxima aula entraremos no <strong>Módulo 2 – Metodologias Ágeis e Framework Scrum para Times Remotos</strong>, aprofundando cerimônias, métricas de fluxo e facilitação remota.</p>
+                    <div class="d-flex flex-wrap justify-content-center mt-4">
+                        <button type="button" class="btn btn-outline-primary m-2" id="restart-quiz"><i class="bi bi-arrow-clockwise"></i> Tentar Quiz Novamente</button>
+                        <button type="button" class="btn btn-danger m-2" id="download-pdf"><i class="bi bi-file-earmark-pdf-fill"></i> Baixar Aula em PDF</button>
+                    </div>`
+                }
+            ];
+
+            const slidesContainer = document.getElementById('slides-container');
+            slidesContent.forEach((slideData, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide';
+                if (index === 0) slideDiv.classList.add('active');
+                
+                let slideHTML = `<h2>${slideData.title}</h2><hr class="mb-4">${slideData.content}`;
+                if (slideData.image) {
+                    slideHTML += `<img src="${slideData.image}" class="slide-image" alt="Imagem ilustrativa" loading="lazy" crossorigin="anonymous">`;
+                }
+                slideDiv.innerHTML = slideHTML;
+                slidesContainer.appendChild(slideDiv);
+            });
+            
+            const slides = document.querySelectorAll('.slide');
+            const nextButton = document.getElementById('next-slide');
+            const prevButton = document.getElementById('prev-slide');
+            const slideCounter = document.getElementById('slide-counter');
+            let currentSlide = 0;
+
+            const correctAnswers = { q1: 'b', q2: 'b', q3: 'a', q4: 'b', q5: 'b' };
+            const correctAnswersText = {
+                q1: '<strong>b) Ter Folga Total igual a zero ($FT = 0$).</strong>',
+                q2: '<strong>b) Estimativa Mais Provável ($M$), que tem peso 4.</strong>',
+                q3: '<strong>a) O maior Término Mais Cedo (EF) entre suas predecessoras.</strong>',
+                q4: '<strong>b) Finish-to-Start (FS / Término para Início).</strong>',
+                q5: '<strong>b) Devido ao tempo de onboarding/treinamento e explosão de canais de comunicação.</strong>'
+            };
+
+            function updateSlideView() {
+                slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+                prevButton.disabled = currentSlide === 0;
+                
+                const quizSlideIndex = Array.from(slides).findIndex(s => s.querySelector('#quiz-form'));
+                
+                if (currentSlide === quizSlideIndex - 1) {
+                    nextButton.innerHTML = 'Iniciar Quiz &rarr;';
+                    nextButton.style.display = 'block';
+                } else if (currentSlide >= quizSlideIndex) {
+                    nextButton.style.display = 'none';
+                } else {
+                    nextButton.innerHTML = 'Avançar &rarr;';
+                    nextButton.style.display = 'block';
+                }
+                slideCounter.textContent = `Página ${currentSlide + 1} de ${slides.length}`;
+            }
+            
+            nextButton.addEventListener('click', () => { if (currentSlide < slides.length - 1) { currentSlide++; updateSlideView(); } });
+            prevButton.addEventListener('click', () => { if (currentSlide > 0) { currentSlide--; updateSlideView(); } });
+
+            function checkQuiz() {
+                const quizForm = document.getElementById('quiz-form');
+                if (!quizForm) return;
+                let allAnswered = true;
+                for (let i = 1; i <= 5; i++) {
+                    const qName = `q${i}`;
+                    const resultDiv = document.getElementById(`result-${qName}`);
+                    resultDiv.innerHTML = '';
+                    if (!quizForm.querySelector(`input[name="${qName}"]:checked`)) {
+                        allAnswered = false;
+                        resultDiv.innerHTML = `<div class="result-box wrong-answer"><i class="bi bi-exclamation-triangle-fill"></i> <strong>Por favor, selecione uma resposta.</strong></div>`;
+                    }
+                }
+                if (!allAnswered) return;
+
+                quizForm.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = true);
+                
+                for (let i = 1; i <= 5; i++) {
+                    const qName = `q${i}`;
+                    const userAnswer = quizForm.querySelector(`input[name="${qName}"]:checked`);
+                    const resultDiv = document.getElementById(`result-${qName}`);
+                    let message = '', resultClass = '';
+                    if (userAnswer) {
+                        if (userAnswer.value === correctAnswers[qName]) {
+                            message = '<i class="bi bi-check-circle-fill"></i> <strong>Correto!</strong>';
+                            resultClass = 'correct-answer';
+                            userAnswer.parentElement.classList.add('correct');
+                        } else {
+                            message = `<i class="bi bi-x-circle-fill"></i> <strong>Incorreto.</strong> A resposta correta é a ${correctAnswersText[qName]}`;
+                            resultClass = 'wrong-answer';
+                        }
+                    }
+                    resultDiv.innerHTML = `<div class="result-box ${resultClass}">${message}</div>`;
+                }
+                document.getElementById('submit-quiz').disabled = true;
+                setTimeout(() => {
+                    const finalSlideIndex = Array.from(slides).findIndex(s => s.querySelector('#download-pdf'));
+                    currentSlide = finalSlideIndex;
+                    updateSlideView();
+                }, 4500);
+            }
+
+            function restartQuiz() {
+                const quizSlideIndex = Array.from(slides).findIndex(s => s.querySelector('#quiz-form'));
+                currentSlide = quizSlideIndex;
+                updateSlideView();
+                
+                setTimeout(() => {
+                    const quizForm = document.getElementById('quiz-form');
+                    if (!quizForm) return;
+                    quizForm.reset();
+                    quizForm.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        radio.disabled = false;
+                        radio.parentElement.classList.remove('correct');
+                    });
+                    for (let i = 1; i <= 5; i++) { document.getElementById(`result-q${i}`).innerHTML = ''; }
+                    document.getElementById('submit-quiz').disabled = false;
+                }, 100);
+            }
+            
+            async function generatePDF() {
+                const pdfButton = document.getElementById('download-pdf');
+                pdfButton.disabled = true;
+                pdfButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Gerando PDF...';
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
+                const originalActiveSlide = currentSlide;
+                const mainContainer = document.querySelector('.container-aula');
+                
+                for (let i = 0; i < slides.length - 1; i++) {
+                    const slideContent = slides[i];
+                    
+                    mainContainer.classList.add('pdf-capture-mode');
+                    slides.forEach(s => s.classList.remove('active'));
+                    slideContent.classList.add('active');
+                    await new Promise(resolve => setTimeout(resolve, 80));
+                    const canvas = await html2canvas(slideContent, { scale: 2.5, useCORS: true, logging: false }).catch(e => console.error(e));
+                    
+                    mainContainer.classList.remove('pdf-capture-mode');
+                    if (canvas) {
+                        const imgData = canvas.toDataURL('image/jpeg', 0.92);
+                        const pdfWidth = pdf.internal.pageSize.getWidth();
+                        const pdfHeight = pdf.internal.pageSize.getHeight();
+                        const imgRatio = canvas.width / canvas.height;
+                        
+                        let finalWidth = pdfWidth - 20;
+                        let finalHeight = finalWidth / imgRatio;
+                        if (finalHeight > pdfHeight - 20) {
+                            finalHeight = pdfHeight - 20;
+                            finalWidth = finalHeight * imgRatio;
+                        }
+                        const xOffset = (pdfWidth - finalWidth) / 2;
+                        
+                        if (i > 0) pdf.addPage();
+                        
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(150);
+                        pdf.text(`Aula 02: Desenvolvimento de Soluções Remotas - Slide ${i + 1}`, 10, 8);
+                        pdf.addImage(imgData, 'JPEG', xOffset, 12, finalWidth, finalHeight);
+                    }
+                }
+                
+                pdf.save('aula-02-planejamento-tempo-cpm-gantt.pdf');
+                
+                slides.forEach(s => s.classList.remove('active'));
+                slides[originalActiveSlide].classList.add('active');
+                currentSlide = originalActiveSlide;
+                updateSlideView();
+                
+                pdfButton.disabled = false;
+                pdfButton.innerHTML = '<i class="bi bi-file-earmark-pdf-fill"></i> Baixar Aula em PDF';
+            }
+
+            document.body.addEventListener('click', function(event) {
+                if (event.target && event.target.id === 'submit-quiz') checkQuiz();
+                if (event.target && event.target.id === 'restart-quiz') restartQuiz();
+                if (event.target && event.target.id === 'download-pdf') generatePDF();
+            });
+            updateSlideView();
+        });
+    </script>
+</body>
+</html>
