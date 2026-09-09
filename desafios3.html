@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Prático Aula 03 — Laboratório de Colaboração Técnica & Governança Remota | DSR</title>
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #c0001a;
+            --red-dark: #8b0013;
+            --text: #1a1a2e;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding-bottom: 3rem;
+        }
+
+        code, pre { font-family: 'Fira Code', monospace; }
+
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .hero-challenge {
+            background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 70%, #e53935 100%);
+            color: #fff;
+            padding: 2.5rem 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-lab {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-preview {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            border: 1px solid #313244;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="index.html" class="text-decoration-none text-dark fw-bold d-flex align-items-center gap-2">
+                <i class="bi bi-arrow-left-circle text-danger fs-5"></i>
+                <span>Voltar ao Portal Principal</span>
+            </a>
+            <a href="dsr3.html" class="btn btn-outline-danger btn-sm fw-semibold">
+                <i class="bi bi-play-circle-fill me-1"></i> Abrir Slides Aula 03
+            </a>
+        </div>
+    </header>
+
+    <div class="hero-challenge">
+        <div class="container">
+            <span class="badge bg-white text-danger fw-bold text-uppercase mb-2">Laboratório Avaliativo &bull; DSR</span>
+            <h1 class="fw-bold mb-2">Desafio Prático da Aula 03: Governança Técnica em Projetos Remotos</h1>
+            <p class="lead fs-6 text-white-50 mb-0">Atividade de modelagem e entrega: crie os padrões contratuais de código, CI e tomadas de decisão arquitetural para um time assíncrono de engenharia.</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="row g-4">
+            <div class="col-lg-8">
+
+                <!-- Cenário -->
+                <div class="card-lab">
+                    <h5 class="fw-bold text-danger mb-3"><i class="bi bi-building-gear me-2"></i> O Cenário Corporativo</h5>
+                    <p class="text-muted small">
+                        Você assumiu a liderança técnica de um projeto distribuído composto por 8 desenvolvedores em 3 fusos horários diferentes. A equipe sofre com constantes quebras de build em produção, discussões redundantes em chats que se perdem e total desconhecimento das razões pelas quais determinadas tecnologias legadas foram adotadas.
+                    </p>
+                    <p class="text-muted small mb-0">
+                        Sua missão neste laboratório é implementar a <strong>tríade de governança assíncrona</strong>: o Contrato de Pull Request, o Pipeline de Validação Automatizada e o Registro de Decisão Arquitetural (ADR).
+                    </p>
+                </div>
+
+                <!-- Tarefa 1 -->
+                <div class="card-lab">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">1. Template de Pull Request (<code>PULL_REQUEST_TEMPLATE.md</code>)</h5>
+                        <span class="badge bg-primary">Obrigatório</span>
+                    </div>
+                    <p class="text-muted small mb-3">Monte o arquivo de template padrão que qualquer membro do time verá ao abrir um PR no repositório.</p>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Cole ou digite o Markdown do Template:</label>
+                        <textarea class="form-control font-monospace small" id="labPrText" rows="6">## 📌 Descrição da Mudança
+<!-- Resuma o que foi feito e qual issue foi resolvida -->
+
+## 🧪 Roteiro de Teste
+<!-- Passo a passo detalhado para o revisor rodar localmente sem supervisão -->
+
+## 🛡️ Checklist de Qualidade Remota
+- [ ] Testes unitários cobrindo o novo fluxo
+- [ ] Sem variáveis de ambiente sensíveis expostas
+- [ ] Atualização de documentação / Swagger inclusa</textarea>
+                    </div>
+                </div>
+
+                <!-- Tarefa 2 -->
+                <div class="card-lab">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">2. Registro de Decisão Arquitetural (ADR 001)</h5>
+                        <span class="badge bg-success">Obrigatório</span>
+                    </div>
+                    <p class="text-muted small mb-3">Defina a ADR que homologa a substituição de conexões diretas ao banco de dados por uma fila orientada a eventos.</p>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Markdown da ADR:</label>
+                        <textarea class="form-control font-monospace small" id="labAdrText" rows="7"># ADR 001: Adoção de Mensageria Assíncrona com RabbitMQ
+
+## Status: Aprovado
+
+## Contexto
+O tráfego de requisições concorrentes de checkout gerou sobrecarga crônica no pool de conexões do banco relacional PostgreSQL.
+
+## Decisão
+Desacoplar o processamento de pedidos utilizando filas RabbitMQ para consumo assíncrono.
+
+## Consequências
+- Positivas: Processamento resiliente a picos de tráfego e isolamento de falhas.
+- Trade-offs: Necessidade de monitoramento de dead-letter queues e manutenção de cluster dedicado.</textarea>
+                    </div>
+                </div>
+
+                <!-- Gerador de Relatório -->
+                <div class="card-lab border-danger">
+                    <h5 class="fw-bold text-danger mb-2"><i class="bi bi-file-earmark-arrow-down-fill me-2"></i> Exportar Entrega do Laboratório</h5>
+                    <p class="text-muted small mb-3">Gere a evidência formatada dos seus templates para submissão e arquivamento acadêmico.</p>
+                    <button class="btn btn-danger btn-sm fw-semibold" onclick="generateReport()">
+                        <i class="bi bi-download me-1"></i> Baixar Arquivo de Entrega (.md)
+                    </button>
+                    <div id="exportStatus" class="mt-2 small text-success fw-semibold"></div>
+                </div>
+
+            </div>
+
+            <!-- Coluna Lateral: Guia Rápido de Avaliação -->
+            <div class="col-lg-4">
+                <div class="sticky-top" style="top: 80px;">
+                    <div class="card-lab">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-clipboard-check text-danger me-2"></i> Critérios de Aceite</h6>
+                        <ul class="list-unstyled small text-muted mb-0" style="line-height: 2;">
+                            <li><i class="bi bi-check2 text-success me-2"></i> Clareza na descrição do problema de negócio.</li>
+                            <li><i class="bi bi-check2 text-success me-2"></i> Roteiro de testes 100% reprodutível por terceiros.</li>
+                            <li><i class="bi bi-check2 text-success me-2"></i> Registro explícito de prós e contras na ADR.</li>
+                            <li><i class="bi bi-check2 text-success me-2"></i> Aderência a fluxos assíncronos e sem bloqueios.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card-lab">
+                        <h6 class="fw-bold mb-2"><i class="bi bi-folder2-open text-primary me-2"></i> Onde Salvar no Projeto</h6>
+                        <p class="small text-muted mb-2">Estrutura de pastas recomendada no repositório Git:</p>
+                        <pre class="code-preview mb-0">meu-projeto/
+├── .github/
+│   └── PULL_REQUEST_TEMPLATE.md
+├── docs/
+│   └── adr/
+│       └── 0001-adocao-rabbitmq.md
+└── README.md</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function generateReport() {
+            const pr = document.getElementById('labPrText').value;
+            const adr = document.getElementById('labAdrText').value;
+            const content = `# SUBMISSÃO DE ATIVIDADE PRÁTICA - AULA 03 (DSR)\nData: ${new Date().toLocaleDateString('pt-BR')}\n\n---\n\n# 1. PULL REQUEST TEMPLATE (.github/PULL_REQUEST_TEMPLATE.md)\n\n${pr}\n\n---\n\n# 2. ARCHITECTURE DECISION RECORD (docs/adr/0001.md)\n\n${adr}\n`;
+
+            const blob = new Blob([content], { type: 'text/markdown;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'dsr_aula03_laboratorio.md';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            document.getElementById('exportStatus').innerHTML = '<i class="bi bi-check-circle me-1"></i> Arquivo <code>dsr_aula03_laboratorio.md</code> baixado com sucesso!';
+        }
+    </script>
+</body>
+</html>

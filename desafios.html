@@ -3,486 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atividade Pr&aacute;tica: CPM &amp; Prazos | DSR &mdash; Anhanguera</title>
+    <title>Desafios CPM — 4 Cenários | DSR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --red:      #c0001a;
-            --red-dark: #8b0013;
-            --red-soft: #ffebee;
-            --text:     #1a1a2e;
-            --muted:    #64748b;
-            --border:   #e2e8f0;
-            --bg:       #f8fafc;
-        }
-        *, *::before, *::after { box-sizing: border-box; }
-        body {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding-bottom: 4rem;
-        }
-
-        /* ── TOPBAR ── */
-        .topbar {
-            background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 60%, #e53935 100%);
-            color: #fff;
-            padding: 1.25rem 1rem;
-        }
-        .topbar a {
-            color: rgba(255,255,255,.75);
-            text-decoration: none;
-            font-size: .85rem;
-            font-weight: 600;
-            transition: color .2s;
-        }
-        .topbar a:hover { color: #fff; }
-        .topbar .sep { opacity: .4; margin: 0 .4rem; }
-        .topbar h1 {
-            font-size: clamp(1.2rem, 3vw, 1.6rem);
-            font-weight: 800;
-            margin: .5rem 0 .25rem;
-        }
-        .topbar-meta { font-size: .82rem; opacity: .8; }
-        .topbar-wave {
-            display: block;
-            width: 100%;
-            height: 40px;
-        }
-
-        /* ── STICKY ACTION BAR ── */
-        .action-bar {
-            position: sticky;
-            top: 0;
-            z-index: 200;
-            background: #fff;
-            border-bottom: 2px solid var(--border);
-            padding: .6rem 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,.07);
-        }
-
-        /* ── IDENTIFICATION CARD ── */
-        .id-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,.05);
-            margin-bottom: 2rem;
-        }
-
-        /* ── INSTRUCTIONS ── */
-        .instructions {
-            background: var(--red-soft);
-            border-left: 4px solid var(--red);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            margin-bottom: 2rem;
-            font-size: .9rem;
-        }
-        .instructions h6 { color: var(--red); font-weight: 700; margin-bottom: .5rem; }
-
-        /* ── SCENARIO CARD ── */
-        .scenario-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-left: 5px solid var(--red);
-            border-radius: 16px;
-            padding: 1.75rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,.05);
-        }
-        .scenario-title {
-            color: var(--red);
-            font-weight: 800;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-            margin-bottom: 1rem;
-        }
-        .scenario-num {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--red);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: .85rem;
-            font-weight: 800;
-            flex-shrink: 0;
-        }
-        .context-box {
-            background: var(--bg);
-            border-left: 3px solid var(--muted);
-            border-radius: 8px;
-            padding: .75rem 1rem;
-            margin-bottom: 1.25rem;
-            font-style: italic;
-            font-size: .9rem;
-            color: var(--muted);
-        }
-
-        /* ── TABLE ── */
-        .table-custom thead {
-            background: var(--red);
-            color: #fff;
-        }
-        .table-custom th, .table-custom td { vertical-align: middle; text-align: center; }
-        .table-custom tbody tr:hover { background: var(--red-soft); }
-
-        /* ── FORM CONTROLS ── */
-        .form-control-answer {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: .88rem;
-            transition: all .2s;
-        }
-        .form-control-answer:focus {
-            background: #fff;
-            border-color: var(--red);
-            box-shadow: 0 0 0 3px rgba(192,0,26,.12);
-        }
-        .form-label { font-size: .83rem; font-weight: 700; color: var(--muted); margin-bottom: .35rem; }
-
-        /* ── BUTTONS ── */
-        .btn-red {
-            background: var(--red);
-            color: #fff;
-            font-weight: 700;
-            border: none;
-            border-radius: 50px;
-            padding: .5rem 1.3rem;
-            font-size: .88rem;
-            transition: filter .2s, transform .15s;
-        }
-        .btn-red:hover { filter: brightness(1.1); transform: translateY(-1px); color: #fff; }
-        .btn-outline-dsr {
-            border: 2px solid var(--border);
-            color: var(--muted);
-            font-weight: 600;
-            border-radius: 50px;
-            padding: .45rem 1.1rem;
-            font-size: .88rem;
-            background: #fff;
-            transition: all .2s;
-        }
-        .btn-outline-dsr:hover { border-color: var(--red); color: var(--red); }
-
-        /* ── BACK LINK ── */
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: .3rem;
-            color: rgba(255,255,255,.8);
-            font-size: .82rem;
-            font-weight: 600;
-            text-decoration: none;
-            margin-bottom: .75rem;
-        }
-        .back-link:hover { color: #fff; }
-
-        /* ── BADGE ── */
-        .badge-module {
-            background: rgba(255,255,255,.2);
-            border: 1px solid rgba(255,255,255,.3);
-            border-radius: 50px;
-            padding: .2rem .7rem;
-            font-size: .78rem;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        html { scroll-behavior: smooth; }
-        @media print { .action-bar, .no-print { display: none !important; } }
+        :root { --amber: #e65100; --border: #e2e8f0; --bg: #f8fafc; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: #1e293b; margin: 0; padding-bottom: 3rem; }
+        .topbar { background: #fff; border-bottom: 1px solid var(--border); padding: 0.75rem 1.5rem; position: sticky; top: 0; z-index: 100; }
+        .hero-desafio { background: linear-gradient(135deg, #b23c00 0%, var(--amber) 100%); color: #fff; padding: 2.5rem 1rem; }
+        .card-custom { background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); padding: 1.5rem; margin-bottom: 1.5rem; }
     </style>
 </head>
 <body>
+    <header class="topbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="index.html" class="text-dark fw-bold text-decoration-none d-flex align-items-center gap-2">
+                <i class="bi bi-arrow-left-circle text-warning fs-5"></i><span>Voltar ao Portal</span>
+            </a>
+            <a href="SIMULADOR_DSR.html" class="btn btn-primary btn-sm fw-semibold"><i class="bi bi-lightning-charge me-1"></i> Abrir Simulador CPM</a>
+        </div>
+    </header>
 
-<!-- TOPBAR -->
-<div class="topbar">
-    <div class="container">
-        <a href="index.html" class="back-link"><i class="bi bi-arrow-left-circle-fill"></i> Voltar &agrave; disciplina</a>
-        <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
-            <div>
-                <h1><i class="bi bi-pencil-square me-2" style="opacity:.8;"></i>Atividade Pr&aacute;tica de Laborat&oacute;rio</h1>
-                <div class="topbar-meta">
-                    <span class="badge-module">M&oacute;dulo 1: Planejamento &amp; Tempo</span>
-                    &nbsp;&middot;&nbsp; Prof. Me. Maximiano Eduardo Pereira &nbsp;&middot;&nbsp; Anhanguera Uberl&acirc;ndia
+    <div class="hero-desafio">
+        <div class="container">
+            <span class="badge bg-white text-dark fw-bold mb-2">Atividade Avaliativa 01</span>
+            <h1 class="fw-bold mb-2">Laboratório Prático: 4 Cenários de CPM</h1>
+            <p class="text-white-50 mb-0">Analise os 4 projetos abaixo, modele as dependências no simulador e responda os prazos e caminhos críticos correspondentes.</p>
+        </div>
+    </div>
+
+    <main class="container mt-4">
+        <div class="row g-4">
+            <!-- Cenário 1 -->
+            <div class="col-md-6">
+                <div class="card-custom h-100">
+                    <span class="badge bg-primary mb-2">Cenário 1</span>
+                    <h5 class="fw-bold">Migração para Microsserviços</h5>
+                    <p class="small text-muted mb-3">Refatoração de backend monolítico em serviços desacoplados conteinerizados.</p>
+                    <ul class="small text-secondary ps-3 mb-3">
+                        <li><strong>A:</strong> Análise de Domínio (4 dias) [sem predecessores]</li>
+                        <li><strong>B:</strong> Setup de Cluster Kubernetes (6 dias) [Predecessor: A]</li>
+                        <li><strong>C:</strong> Extração do Serviço de Auth (5 dias) [Predecessor: A]</li>
+                        <li><strong>D:</strong> Testes de Carga & Gateway (3 dias) [Predecessores: B, C]</li>
+                    </ul>
+                    <div class="p-2 bg-light border rounded small"><strong>Desafio:</strong> Calcule o prazo mínimo e a folga da atividade C.</div>
                 </div>
             </div>
-            <div class="text-end d-none d-md-block" style="opacity:.15;font-size:4rem;line-height:1;">
-                <i class="bi bi-diagram-3"></i>
-            </div>
-        </div>
-    </div>
-    <svg class="topbar-wave" viewBox="0 0 1440 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,25 C360,50 1080,0 1440,25 L1440,40 L0,40 Z" fill="#f8fafc"/>
-    </svg>
-</div>
 
-<!-- ACTION BAR -->
-<div class="action-bar no-print">
-    <div class="container d-flex gap-2 justify-content-end">
-        <button type="button" class="btn-outline-dsr" onclick="window.print()">
-            <i class="bi bi-printer-fill me-1"></i> Imprimir
-        </button>
-        <button type="button" class="btn-red" id="btn-export-pdf">
-            <i class="bi bi-file-earmark-pdf-fill me-1"></i> Baixar Relat&oacute;rio (PDF)
-        </button>
-    </div>
-</div>
+            <!-- Cenário 2 -->
+            <div class="col-md-6">
+                <div class="card-custom h-100">
+                    <span class="badge bg-success mb-2">Cenário 2</span>
+                    <h5 class="fw-bold">Lançamento de App Mobile Híbrido</h5>
+                    <p class="small text-muted mb-3">Desenvolvimento de aplicativo com autenticação biométrica e integração de pagamento.</p>
+                    <ul class="small text-secondary ps-3 mb-3">
+                        <li><strong>A:</strong> Protótipo UI/UX no Figma (3 dias)</li>
+                        <li><strong>B:</strong> Desenvolvimento Telas React Native (7 dias) [Pred: A]</li>
+                        <li><strong>C:</strong> Integração API Gateway (4 dias) [Pred: A]</li>
+                        <li><strong>D:</strong> Publicação nas Lojas Apple/Google (2 dias) [Pred: B, C]</li>
+                    </ul>
+                    <div class="p-2 bg-light border rounded small"><strong>Desafio:</strong> Identifique qual atividade possui folga neste cronograma.</div>
+                </div>
+            </div>
 
-<main class="container mt-4" id="printable-area">
+            <!-- Cenário 3 -->
+            <div class="col-md-6">
+                <div class="card-custom h-100">
+                    <span class="badge bg-danger mb-2">Cenário 3</span>
+                    <h5 class="fw-bold">Implantação de Pipeline CI/CD Seguro</h5>
+                    <p class="small text-muted mb-3">Automação de testes unitários, linter e scanning de vulnerabilidades estáticas.</p>
+                    <ul class="small text-secondary ps-3 mb-3">
+                        <li><strong>A:</strong> Levantamento de Ferramentas (2 dias)</li>
+                        <li><strong>B:</strong> Configuração de GitHub Actions (4 dias) [Pred: A]</li>
+                        <li><strong>C:</strong> Integração SonarQube & SAST (5 dias) [Pred: A]</li>
+                        <li><strong>D:</strong> Validação com Staging (3 dias) [Pred: B, C]</li>
+                    </ul>
+                    <div class="p-2 bg-light border rounded small"><strong>Desafio:</strong> Qual o caminho crítico se a atividade B atrasar em 2 dias?</div>
+                </div>
+            </div>
 
-    <!-- IDENTIFICACAO -->
-    <div class="id-card">
-        <div class="row g-3">
-            <div class="col-md-8">
-                <label class="form-label">Integrantes do Grupo</label>
-                <input type="text" class="form-control form-control-answer" id="student_names" placeholder="Nome completo dos integrantes...">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Data da Realiza&ccedil;&atilde;o</label>
-                <input type="date" class="form-control form-control-answer" id="activity_date">
-            </div>
-        </div>
-    </div>
-
-    <!-- INSTRUCOES -->
-    <div class="instructions">
-        <h6><i class="bi bi-info-circle-fill me-1"></i> Instru&ccedil;&otilde;es do Laborat&oacute;rio</h6>
-        <ol class="mb-0 ps-3">
-            <li>Utilize o <strong><a href="SIMULADOR_DSR.html" target="_blank" style="color:var(--red);">Simulador Web de CPM</a></strong> para modelar a rede de preced&ecirc;ncias de cada cen&aacute;rio.</li>
-            <li>Analise os resultados computados (ES, EF, LS, LF, FT) e responda &agrave;s quest&otilde;es anal&iacute;ticas.</li>
-            <li>Ao finalizar, utilize o bot&atilde;o <strong>&ldquo;Baixar Relat&oacute;rio (PDF)&rdquo;</strong> para salvar sua entrega.</li>
-        </ol>
-    </div>
-
-    <!-- CENARIO 1 -->
-    <div class="scenario-card">
-        <div class="scenario-title">
-            <div class="scenario-num">1</div>
-            Cen&aacute;rio 1: Migra&ccedil;&atilde;o para Microsservi&ccedil;os
-        </div>
-        <div class="context-box">
-            Uma startup distribu&iacute;da precisa desacoplar o m&oacute;dulo financeiro de um mon&oacute;lito sem impactar a produ&ccedil;&atilde;o.
-        </div>
-        <div class="table-responsive mb-3">
-            <table class="table table-sm table-bordered table-custom">
-                <thead><tr><th>ID</th><th>Descri&ccedil;&atilde;o</th><th>Dura&ccedil;&atilde;o</th><th>Predecessoras</th></tr></thead>
-                <tbody>
-                    <tr><td><strong>A</strong></td><td>Mapeamento de Dom&iacute;nio e Banco</td><td>4 dias</td><td>&mdash;</td></tr>
-                    <tr><td><strong>B</strong></td><td>Provisionamento Docker/K8s em Nuvem</td><td>3 dias</td><td>A</td></tr>
-                    <tr><td><strong>C</strong></td><td>Implementa&ccedil;&atilde;o da Nova API Rest</td><td>6 dias</td><td>A</td></tr>
-                    <tr><td><strong>D</strong></td><td>Cria&ccedil;&atilde;o de Testes de Carga e Seguran&ccedil;a</td><td>3 dias</td><td>B, C</td></tr>
-                    <tr><td><strong>E</strong></td><td>Virada de Chave (Deploy Produ&ccedil;&atilde;o)</td><td>2 dias</td><td>D</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="row g-3">
-            <div class="col-md-7">
-                <label class="form-label">Caminho Cr&iacute;tico (Sequ&ecirc;ncia de IDs)</label>
-                <input type="text" class="form-control form-control-answer" placeholder="Ex: A &rarr; C &rarr; D &rarr; E">
-            </div>
-            <div class="col-md-5">
-                <label class="form-label">Prazo M&iacute;nimo Total</label>
-                <input type="text" class="form-control form-control-answer" placeholder="Ex: 15 dias">
-            </div>
-            <div class="col-12">
-                <label class="form-label">A infraestrutura de nuvem (Tarefa B) pode sofrer um atraso de 2 dias sem atrasar o projeto? Justifique com a Folga Total (FT):</label>
-                <textarea class="form-control form-control-answer" rows="2" placeholder="Digite sua an&aacute;lise..."></textarea>
-            </div>
-        </div>
-    </div>
-
-    <!-- CENARIO 2 -->
-    <div class="scenario-card">
-        <div class="scenario-title">
-            <div class="scenario-num">2</div>
-            Cen&aacute;rio 2: App Mobile com Time Distribu&iacute;do
-        </div>
-        <div class="context-box">
-            O time de UI/UX opera em fuso hor&aacute;rio diferente dos desenvolvedores mobile e backend.
-        </div>
-        <div class="table-responsive mb-3">
-            <table class="table table-sm table-bordered table-custom">
-                <thead><tr><th>ID</th><th>Descri&ccedil;&atilde;o</th><th>Dura&ccedil;&atilde;o</th><th>Predecessoras</th></tr></thead>
-                <tbody>
-                    <tr><td><strong>A</strong></td><td>Wireframes e Design System (Figma)</td><td>5 dias</td><td>&mdash;</td></tr>
-                    <tr><td><strong>B</strong></td><td>Modelagem da Base de Dados</td><td>3 dias</td><td>&mdash;</td></tr>
-                    <tr><td><strong>C</strong></td><td>Constru&ccedil;&atilde;o dos Endpoints Backend</td><td>5 dias</td><td>B</td></tr>
-                    <tr><td><strong>D</strong></td><td>Codifica&ccedil;&atilde;o Telas Mobile</td><td>4 dias</td><td>A</td></tr>
-                    <tr><td><strong>E</strong></td><td>Integra&ccedil;&atilde;o Mobile + API Backend</td><td>5 dias</td><td>C, D</td></tr>
-                    <tr><td><strong>F</strong></td><td>Homologa&ccedil;&atilde;o nas Lojas (App/Play)</td><td>3 dias</td><td>E</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="row g-3">
-            <div class="col-12">
-                <label class="form-label">Existem duas frentes que iniciam no Dia 0 (A e B). Qual dita o ritmo cr&iacute;tico inicial e por qu&ecirc;?</label>
-                <textarea class="form-control form-control-answer" rows="2" placeholder="Digite sua an&aacute;lise..."></textarea>
-            </div>
-            <div class="col-12">
-                <label class="form-label">Simula&ccedil;&atilde;o de Crise: Aumente a dura&ccedil;&atilde;o de C para 8 dias no simulador. O que acontece com o Caminho Cr&iacute;tico e com a folga do Design (A &rarr; D)?</label>
-                <textarea class="form-control form-control-answer" rows="2" placeholder="Digite sua an&aacute;lise..."></textarea>
-            </div>
-        </div>
-    </div>
-
-    <!-- CENARIO 3 -->
-    <div class="scenario-card">
-        <div class="scenario-title">
-            <div class="scenario-num">3</div>
-            Cen&aacute;rio 3: Pipeline CI/CD e DevSecOps
-        </div>
-        <div class="context-box">
-            Implanta&ccedil;&atilde;o de automa&ccedil;&atilde;o de testes, linting est&aacute;tico e auditoria de seguran&ccedil;a em equipe remota.
-        </div>
-        <div class="table-responsive mb-3">
-            <table class="table table-sm table-bordered table-custom">
-                <thead><tr><th>ID</th><th>Descri&ccedil;&atilde;o</th><th>Dura&ccedil;&atilde;o</th><th>Predecessoras</th></tr></thead>
-                <tbody>
-                    <tr><td><strong>A</strong></td><td>Levantamento de Pol&iacute;ticas de Seguran&ccedil;a</td><td>2 dias</td><td>&mdash;</td></tr>
-                    <tr><td><strong>B</strong></td><td>Configura&ccedil;&atilde;o do Reposit&oacute;rio e Branches</td><td>2 dias</td><td>&mdash;</td></tr>
-                    <tr><td><strong>C</strong></td><td>Automa&ccedil;&atilde;o de SAST / Vulnerabilidades</td><td>4 dias</td><td>A, B</td></tr>
-                    <tr><td><strong>D</strong></td><td>Pipeline de Testes Unit&aacute;rios/Integra&ccedil;&atilde;o</td><td>3 dias</td><td>B</td></tr>
-                    <tr><td><strong>E</strong></td><td>Configura&ccedil;&atilde;o do Cluster de Homologa&ccedil;&atilde;o</td><td>5 dias</td><td>B</td></tr>
-                    <tr><td><strong>F</strong></td><td>Integra&ccedil;&atilde;o Completa do Pipeline CI/CD</td><td>3 dias</td><td>C, D, E</td></tr>
-                    <tr><td><strong>G</strong></td><td>Auditoria e Emiss&atilde;o de Certificado</td><td>2 dias</td><td>F</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="row g-3">
-            <div class="col-md-7">
-                <label class="form-label">Caminho Cr&iacute;tico</label>
-                <input type="text" class="form-control form-control-answer" placeholder="Ex: B &rarr; ...">
-            </div>
-            <div class="col-md-5">
-                <label class="form-label">Dura&ccedil;&atilde;o Total</label>
-                <input type="text" class="form-control form-control-answer" placeholder="Ex: 12 dias">
-            </div>
-            <div class="col-12">
-                <label class="form-label">Se o gestor aplicar Crashing (alocar mais pessoas) para reduzir a tarefa C de 4 para 2 dias, o projeto termina mais cedo? Justifique com o conceito de folga:</label>
-                <textarea class="form-control form-control-answer" rows="2" placeholder="Digite sua an&aacute;lise..."></textarea>
-            </div>
-        </div>
-    </div>
-
-    <!-- CENARIO 4 -->
-    <div class="scenario-card">
-        <div class="scenario-title">
-            <div class="scenario-num">4</div>
-            Cen&aacute;rio 4: Plataforma E-Commerce
-        </div>
-        <div class="context-box">
-            M&uacute;ltiplas integra&ccedil;&otilde;es paralelas convergindo na etapa de testes finais de ponta a ponta (E2E).
-        </div>
-        <div class="table-responsive mb-3">
-            <table class="table table-sm table-bordered table-custom">
-                <thead><tr><th>ID</th><th>Descri&ccedil;&atilde;o</th><th>Dura&ccedil;&atilde;o</th><th>Predecessoras</th></tr></thead>
-                <tbody>
-                    <tr><td><strong>A</strong></td><td>Gateway de Pagamento</td><td>6 dias</td><td>&mdash;</td></tr>
-                    <tr><td><strong>B</strong></td><td>Integra&ccedil;&atilde;o Log&iacute;stica e Frete</td><td>4 dias</td><td>&mdash;</td></tr>
-                    <tr><td><strong>C</strong></td><td>Cadastro e Importa&ccedil;&atilde;o de Produtos</td><td>2 dias</td><td>&mdash;</td></tr>
-                    <tr><td><strong>D</strong></td><td>M&oacute;dulo de Checkout e Carrinho</td><td>3 dias</td><td>A</td></tr>
-                    <tr><td><strong>E</strong></td><td>Painel de Rastreio de Pedidos</td><td>5 dias</td><td>B</td></tr>
-                    <tr><td><strong>F</strong></td><td>Mecanismo de Busca e Vitrine</td><td>4 dias</td><td>C</td></tr>
-                    <tr><td><strong>G</strong></td><td>Testes Finais Ponta a Ponta (E2E)</td><td>4 dias</td><td>D, E, F</td></tr>
-                    <tr><td><strong>H</strong></td><td>Lan&ccedil;amento Comercial</td><td>1 dia</td><td>G</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="row g-3">
-            <div class="col-12">
-                <label class="form-label">Quais e quantos s&atilde;o os Caminhos Cr&iacute;ticos simult&acirc;neos deste projeto?</label>
-                <input type="text" class="form-control form-control-answer" placeholder="Descreva as rotas cr&iacute;ticas encontradas...">
-            </div>
-            <div class="col-12">
-                <label class="form-label">Por que projetos remotos com m&uacute;ltiplos caminhos cr&iacute;ticos oferecem um risco de gest&atilde;o muito mais elevado?</label>
-                <textarea class="form-control form-control-answer" rows="2" placeholder="Digite sua an&aacute;lise..."></textarea>
-            </div>
-            <div class="col-12 mt-2">
-                <label class="form-label">Tabela de Resultados do Simulador &mdash; Cen&aacute;rio 4:</label>
-                <div class="table-responsive">
-                    <table class="table table-sm table-bordered text-center align-middle">
-                        <thead style="background:var(--red);color:#fff;">
-                            <tr><th>ID</th><th>Dur.</th><th>ES</th><th>EF</th><th>LS</th><th>LF</th><th>FT</th><th>Cr&iacute;tica?</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td><strong>A</strong></td><td>6d</td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td></tr>
-                            <tr><td><strong>B</strong></td><td>4d</td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td></tr>
-                            <tr><td><strong>C</strong></td><td>2d</td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td></tr>
-                            <tr><td><strong>D</strong></td><td>3d</td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td></tr>
-                            <tr><td><strong>E</strong></td><td>5d</td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td></tr>
-                            <tr><td><strong>F</strong></td><td>4d</td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td></tr>
-                            <tr><td><strong>G</strong></td><td>4d</td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td></tr>
-                            <tr><td><strong>H</strong></td><td>1d</td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td><td><input type="text" class="form-control form-control-sm text-center px-1"></td></tr>
-                        </tbody>
-                    </table>
+            <!-- Cenário 4 -->
+            <div class="col-md-6">
+                <div class="card-custom h-100">
+                    <span class="badge bg-warning text-dark mb-2">Cenário 4</span>
+                    <h5 class="fw-bold">Plataforma de E-Commerce B2B</h5>
+                    <p class="small text-muted mb-3">Deploy de portal com catálogo, gateway Pix e integração com ERP legado.</p>
+                    <ul class="small text-secondary ps-3 mb-3">
+                        <li><strong>A:</strong> Modelagem de Banco de Dados (3 dias)</li>
+                        <li><strong>B:</strong> Conector de Integração ERP (8 dias) [Pred: A]</li>
+                        <li><strong>C:</strong> Frontend da Vitrine (5 dias) [Pred: A]</li>
+                        <li><strong>D:</strong> Homologação de Pedidos (4 dias) [Pred: B, C]</li>
+                    </ul>
+                    <div class="p-2 bg-light border rounded small"><strong>Desafio:</strong> Demonstre a folga do Frontend (C) em relação ao conector ERP (B).</div>
                 </div>
             </div>
         </div>
-    </div>
-
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.getElementById('activity_date').valueAsDate = new Date();
-
-    document.getElementById('btn-export-pdf').addEventListener('click', async function() {
-        const btn = this;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Gerando...';
-
-        const { jsPDF } = window.jspdf;
-        const element = document.getElementById('printable-area');
-        const actionBar = document.querySelector('.action-bar');
-        actionBar.style.display = 'none';
-
-        try {
-            const canvas = await html2canvas(element, { scale: 2, useCORS: true, logging: false });
-            const imgData = canvas.toDataURL('image/jpeg', 0.95);
-            const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            const ratio = pdfWidth / canvas.width;
-            const totalPDFHeight = canvas.height * ratio;
-            let heightLeft = totalPDFHeight;
-            let position = 0;
-
-            pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, totalPDFHeight);
-            heightLeft -= pdfHeight;
-
-            while (heightLeft > 0) {
-                position = heightLeft - totalPDFHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, totalPDFHeight);
-                heightLeft -= pdfHeight;
-            }
-
-            const names = document.getElementById('student_names').value.trim();
-            const fileName = names
-                ? `relatorio-cpm-${names.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`
-                : 'relatorio-atividade-cpm.pdf';
-            pdf.save(fileName);
-        } catch (err) {
-            alert('Erro ao gerar PDF. Use Imprimir > Salvar como PDF.');
-        } finally {
-            actionBar.style.display = '';
-            btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-file-earmark-pdf-fill me-1"></i> Baixar Relat&oacute;rio (PDF)';
-        }
-    });
-</script>
+    </main>
 </body>
 </html>

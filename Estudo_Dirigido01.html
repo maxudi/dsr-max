@@ -1,0 +1,396 @@
+Lista de Exercícios — DSR (Aulas 01 a 06)
+Questão 01
+Em arquiteturas de software distribuídas, uma das principais diferenças conceituais entre sistemas monolíticos e soluções remotas é a forma como os componentes interagem. Qual é uma premissa técnica indispensável ao projetar comunicações entre nós remotos?
+
+a) A rede corporativa deve ser tratada como um canal 100% confiável e de latência zero.
+
+b) Todas as chamadas entre nós devem ser síncronas para garantir atomicidade imediata sem o uso de transações distribuídas.
+
+c) Falhas parciais de infraestrutura, oscilações de banda e partições de rede devem ser tratadas como regras esperadas de projeto, e não como exceções raras.
+
+d) A escalabilidade horizontal dispensa a preocupação com o consumo de CPU na serialização de mensagens.
+
+Questão 02
+No protocolo HTTP, o código de status retornado pelo servidor deve refletir com precisão semântica o resultado da operação. Quando uma requisição POST resulta na criação bem-sucedida de uma nova entidade no banco de dados remoto, a resposta recomendada pelas boas práticas RESTful é:
+
+a) 201 Created, contendo idealmente o cabeçalho Location apontando para a URI do novo recurso.
+
+b) 200 OK, com o ID numérico concatenado diretamente na URL de requisição.
+
+c) 204 No Content, garantindo que nenhum byte adicional trafegue de volta ao cliente.
+
+d) 304 Not Modified, instruindo o cliente a buscar os dados no cache local.
+
+Questão 03
+Ao definir os objetivos de continuidade de negócios e contingência operacional (Disaster Recovery), utiliza-se o indicador RTO (Recovery Time Objective). O que essa métrica representa?
+
+a) O volume máximo aceitável de transações ou dados que podem ser perdidos durante um incidente, medido em tempo transcorrido desde o último backup.
+
+b) O custo financeiro estimado por minuto de parada não planejada em ambientes produtivos.
+
+c) A frequência em horas com que as esteiras de integração contínua realizam deploys automáticos em produção.
+
+d) O tempo máximo tolerado pela organização para que um serviço ou sistema seja restabelecido e volte a operar após a ocorrência de uma pane.
+
+Questão 04
+Considere um sistema de agendamento em que o cliente HTTP envia a mesma requisição repetidas vezes devido a instabilidades de rede móvel (quedas de sinal momentâneas). Para evitar que a entidade seja duplicada no banco de dados, a API deve implementar:
+
+a) Um timeout mais longo no cliente, superior a 120 segundos.
+
+b) Idempotência, fazendo uso de um identificador único de operação (como um cabeçalho Idempotency-Key).
+
+c) A conversão obrigatória da requisição POST em uma chamada GET com parâmetros de consulta na URL.
+
+d) Bloqueio de novos cadastros pelo endereço IP do cliente por 24 horas.
+
+Questão 05
+No Apache Kafka, o paralelismo de consumo dentro de um mesmo Consumer Group é diretamente delimitado por um componente arquitetural do tópico. Qual é esse componente?
+
+a) Pelo tamanho em megabytes do buffer de memória do broker mestre.
+
+b) Pela taxa de compressão utilizada no payload (GZIP vs Snappy).
+
+c) Pelo número de partições existentes no tópico.
+
+d) Pelo número de réplicas em nós zookeeper/kraft configuradas no cluster.
+
+Questão 06
+Em uma arquitetura de mensageria baseada no RabbitMQ (AMQP), quando um produtor precisa que uma mensagem seja replicada e entregue a todas as filas ativas conectadas, sem levar em consideração chaves de roteamento específicas, qual tipo de Exchange deve ser utilizado?
+
+a) Direct Exchange.
+
+b) Topic Exchange com binding *.
+
+c) Headers Exchange com correspondência estrita x-match: all.
+
+d) Fanout Exchange.
+
+Questão 07
+Na arquitetura de segurança Zero Trust aplicada ao acesso de colaboradores e serviços remotos, qual princípio resume a postura fundamental exigida na concessão de privilégios?
+
+a) "Nunca confie, sempre verifique continuamente e aplique o princípio do menor privilégio (PoLP)."
+
+b) "Confie após autenticar a máquina com sucesso na VPN corporativa uma única vez no início do expediente."
+
+c) "Permita tráfego lateral irrestrito entre servidores locais desde que estejam dentro da mesma VLAN privada."
+
+d) "Substitua a autenticação multifator (MFA) por senhas alfanuméricas complexas de 32 caracteres com troca obrigatória quinzenal."
+
+Questão 08
+O formato JSON é amplamente adotado em APIs REST. No entanto, quando comparado a soluções binárias como o Protocol Buffers (Protobuf) utilizado no gRPC, o JSON apresenta como desvantagem técnica para comunicação interna de alta frequência:
+
+a) Incapacidade de serializar tipos numéricos de ponto flutuante e booleanos.
+
+b) Falta de suporte nativo na maioria das linguagens de programação contemporâneas.
+
+c) Maior consumo de banda de rede devido à repetição textual das chaves dos campos e maior custo computacional de CPU para realizar o parse textual.
+
+d) Impossibilidade de ser inspecionado por ferramentas de depuração e analisadores de tráfego HTTP.
+
+Questão 09
+Em resiliência de software remoto, qual é a principal finalidade do padrão arquitetural Circuit Breaker em um cliente HTTP/RPC?
+
+a) Interromper preventivamente as chamadas a um serviço remoto com degradação persistente ("abrir o circuito"), falhando rápido e protegendo os recursos locais contra saturação de conexões e threads.
+
+b) Repetir imediatamente e indefinidamente qualquer chamada que retorne código de erro 500 até que o servidor restabeleça a resposta 200 OK.
+
+c) Criptografar as chaves de conexão no banco de dados local antes de despachar o tráfego pela rede externa.
+
+d) Distribuir a carga de tráfego igualmente entre múltiplos núcleos de um mesmo processador utilizando balanceamento por hardware.
+
+Questão 10
+Em relação aos verbos HTTP na construção de APIs Web, analise a diferença operacional entre PUT e PATCH. Assinale a alternativa correta:
+
+a) PUT é reservado exclusivamente para inserção de novas entidades com ID incremental, enquanto PATCH deve ser usado para remover registros inativos.
+
+b) PATCH é inerentemente idempotente por definição matemática na RFC, ao passo que PUT não pode ser idempotente sob nenhuma condição.
+
+c) O verbo PUT trafega parâmetros exclusivamente via query string, enquanto o PATCH exige corpo em XML.
+
+d) PUT tem como semântica a substituição integral do recurso no destino, enquanto PATCH é empregado para modificações parciais de atributos específicos da entidade.
+
+Questão 11
+Uma esteira de CI/CD precisa acessar provedores de nuvem pública para realizar deploys automáticos em ambientes remotos. Para mitigar o risco de vazamento de credenciais mestre gravadas em repositórios, qual prática é recomendada?
+
+a) Salvar as chaves de acesso estáticas da nuvem em um arquivo .env dentro do repositório, desde que o projeto seja configurado como privado.
+
+b) Utilizar federação de identidade baseada em OpenID Connect (OIDC), permitindo que a esteira assuma temporariamente papéis com tokens efêmeros de curta duração.
+
+c) Criar um usuário administrador único compartilhado entre todos os membros da equipe e desativar o log de auditoria da nuvem.
+
+d) Codificar a chave de acesso privada em Base64 e inseri-la diretamente no código-fonte compilado da aplicação.
+
+Questão 12
+A respeito da garantia de entrega de mensagens em sistemas distribuídos, a semântica At-Least-Once assegura que:
+
+a) Nenhuma mensagem será perdida pelo broker, embora mensagens duplicadas possam ser entregues aos consumidores em cenários de falha de conexão ou timeout de confirmação (ACK).
+
+b) Toda mensagem será processada exatamente uma única vez, sem a necessidade de lógica de desduplicação ou idempotência por parte do consumidor.
+
+c) O sistema prioriza velocidade extrema descartando pacotes que não recebam confirmação em até 10 milissegundos.
+
+d) As mensagens enviadas são persistidas exclusivamente na memória RAM e expiram imediatamente após 1 segundo.
+
+Questão 13
+Um incidente operacional corrompeu os dados de uma aplicação às 15:40. O plano de contingência realizou o restore do banco de dados utilizando um snapshot gerado automaticamente às 15:00. O tempo de restauração durou 25 minutos, fazendo o sistema voltar ao ar às 16:05. Qual foi a perda real de dados associada a esse evento para fins de cálculo de RPO?
+
+a) 25 minutos.
+
+b) 65 minutos.
+
+c) 15 minutos.
+
+d) 40 minutos.
+
+Questão 14
+O que caracteriza uma falha por Head-of-Line (HoL) Blocking na camada de aplicação ao utilizar HTTP/1.1 para comunicação entre microsserviços?
+
+a) A incapacidade de processar requisições concorrentes em uma mesma conexão TCP sem que a resposta da requisição anterior seja inteiramente concluída e transmitida pelo servidor.
+
+b) O bloqueio de portas do firewall de borda causado pela expiração do certificado digital TLS.
+
+c) A corrupção dos dados de cabeçalho originada pela perda de pacotes UDP na rede intermediária.
+
+d) O esgotamento do espaço físico em disco no servidor remoto provocado pelo volume de logs não rotacionados.
+
+Questão 15
+Considere a matriz de riscos 5x5 adotada para priorização de controles técnicos em sistemas distribuídos. Se uma vulnerabilidade possui Probabilidade 4 (Alta) e Impacto 3 (Moderado), seu nível de severidade e a conduta operacional recomendada são:
+
+a) Severidade 7; risco negligenciável sem necessidade de monitoramento.
+
+b) Severidade 1; risco aceito automaticamente sem registro em documentação.
+
+c) Severidade 12; risco médio, devendo ser planejado no backlog técnico com monitoramento contínuo.
+
+d) Severidade 25; desativação imediata de todo o cluster de produção sem prazo para retorno.
+
+Questão 16
+No contexto do RabbitMQ, o que acontece com uma mensagem caso o processo consumidor morra inesperadamente por uma pane de hardware antes de emitir a confirmação de recebimento (basic.ack), estando o modo manual de ACK habilitado?
+
+a) A mensagem é apagada permanentemente da fila pelo broker para evitar congestionamento.
+
+b) O broker reenfileira a mensagem para que outro nó consumidor ativo possa recebê-la e processá-la.
+
+c) O broker trava todas as filas adjacentes e encerra a conexão de todos os produtores conectados.
+
+d) A mensagem é convertida automaticamente em uma requisição HTTP síncrona enviada ao endereço de IP do produtor.
+
+Questão 17
+O protocolo gRPC opera sobre o transporte HTTP/2. Qual das características técnicas a seguir pertence nativamente ao HTTP/2 e contribui para a alta performance de chamadas remotas no gRPC?
+
+a) Comunicação sem criptografia por imposição da RFC, eliminando o consumo de CPU gerado pelo TLS.
+
+b) Criação de um novo túnel TCP dedicado para cada objeto serializado que transita entre cliente e servidor.
+
+c) Multiplexação de múltiplos fluxos (streams) independentes bidirecionais sobre uma única conexão TCP persistente.
+
+d) Compressão textual obrigatória utilizando exclusivamente o formato Base64 para imagens.
+
+Questão 18
+Uma equipe identifica que, em horários de pico, retentativas automáticas e imediatas de clientes móveis que enfrentam timeout temporário de rede estão provocando sobrecarga severa no cluster de backend. Qual algoritmo de retentativa deve ser implementado no cliente para mitigar esse comportamento?
+
+a) Linear Retry com intervalo fixo de 100 milissegundos.
+
+b) Retentativa em loop contínuo sem pausas até a obtenção de resposta HTTP 200.
+
+c) Desativação do mecanismo de DNS para forçar o tráfego a trafegar por um único IP estático.
+
+d) Exponential Backoff com Jitter, aumentando o intervalo exponencialmente entre tentativas sucessivas com variação aleatória de tempo.
+
+Questão 19
+O que prescreve o padrão de arquitetura de dados Transactional Outbox em sistemas distribuídos que publicam mensagens ou eventos a partir de modificações em bancos de dados relacionais?
+
+a) Gravar a alteração da entidade de negócio e a mensagem do evento na mesma transação atômica local do banco de dados (por exemplo, em uma tabela de outbox), utilizando um processo auxiliar para despachá-la de forma segura ao broker.
+
+b) Enviar a mensagem ao broker de mensageria primeiro e, caso ele confirme com ACK, iniciar a gravação dos dados na tabela principal do banco.
+
+c) Criar uma réplica em memória do banco relacional exclusivamente para descartar eventos com atraso de rede.
+
+d) Utilizar o protocolo Two-Phase Commit (2PC) bloqueando todos os nós de banco de dados remotos até que o consumidor final confirme o consumo.
+
+Questão 20
+A regra de backup conhecida na engenharia de confiabilidade como Regra 3-2-1 estabelece como critério mínimo para mitigação de perda catastrófica de dados:
+
+a) 3 dias úteis para retenção, 2 horas de tolerância de downtime e 1 administrador responsável pelo restore manual.
+
+b) 3 servidores de aplicação, 2 bancos relacionais e 1 balanceador de carga no mesmo data center.
+
+c) 3 snapshots por hora gravados no mesmo volume de disco físico em que o sistema operacional está instalado.
+
+d) 3 cópias dos dados (1 primária e 2 backups), distribuídas em pelo menos 2 tipos de mídia distintos, com pelo menos 1 cópia armazenada fora do local principal (off-site/região remota isolada).
+
+Questão 21
+Em contratos de integração que utilizam o Protocol Buffers (Protobuf), qual conduta técnica é mandatória para garantir a retrocompatibilidade (backward compatibility) quando um desenvolvedor precisa adicionar um novo atributo a uma mensagem existente?
+
+a) Reutilizar um índice numérico de um campo obsoleto que não seja mais utilizado pela aplicação.
+
+b) Atribuir um novo índice numérico sequencial ao novo campo, mantendo inalterados os números e tipos dos campos previamente publicados.
+
+c) Modificar o tipo de dado de campos existentes para que o compilador realize coerção automática de tipos.
+
+d) Alterar o nome do pacote de mensagens gerando uma quebra intencional em todos os clientes remotos legados.
+
+Questão 22
+Qual é o papel exercido por uma fila do tipo Dead Letter Queue (DLQ) em uma arquitetura orientada a eventos?
+
+a) Armazenar temporariamente cópias de mensagens de alta prioridade para acelerar leituras de consumidores em tempo real.
+
+b) Funcionar como buffer de cache em memória para balancear picos de chamadas GET síncronas.
+
+c) Reter mensagens que não puderam ser processadas com sucesso após esgotadas as tentativas máximas de reprocessamento (poison messages), permitindo isolamento do erro e posterior depuração sem travar a esteira.
+
+d) Centralizar os arquivos de log de auditoria do sistema operacional do servidor de banco de dados.
+
+Questão 23
+No Apache Kafka, o deslocamento que identifica a posição de leitura de cada evento por um consumidor dentro de uma partição é denominado:
+
+a) Offset.
+
+b) Partition Key.
+
+c) Routing Slip.
+
+d) Magic Byte.
+
+Questão 24
+Ao desenvolver uma API REST que segue a especificação técnica RFC 7807 (Problem Details for HTTP APIs), o formato padronizado de payload retornado em caso de erros de validação ou exceções no servidor é estruturado tipicamente em:
+
+a) Texto puro contendo a stack trace integral da linguagem de programação.
+
+b) Uma página HTML com estilos CSS embutidos exibindo uma ilustração genérica de erro.
+
+c) Um array serializado em Base64 contendo os arquivos de configuração do servidor web.
+
+d) Um documento JSON com atributos descritivos padronizados, tais como type, title, status, detail e instance.
+
+Questão 25
+Em uma esteira de segurança para repositórios Git remotos, o que é e em que momento atua um Pre-commit Hook de proteção contra vazamento de credenciais?
+
+a) Um script executado localmente na máquina do desenvolvedor antes da confirmação do commit, inspecionando o código alterado em busca de padrões de chaves privadas e senhas para bloquear a gravação do snapshot.
+
+b) Um serviço em nuvem acionado 24 horas após o merge em produção para revogar tokens expirados no banco de dados.
+
+c) Uma política no servidor de DNS que barra requisições HTTP originadas de fora do país da organização.
+
+d) Um plugin do navegador que impede que usuários utilizem senhas com menos de 8 caracteres em sites corporativos.
+
+Questão 26
+O que diferencia o modelo de comunicação RPC (Remote Procedure Call) adotado pelo gRPC do modelo orientado a recursos do estilo arquitetural REST?
+
+a) O RPC opera exclusivamente em redes de longa distância (WAN), ao passo que o REST só é funcional em redes locais (LAN).
+
+b) O REST proíbe a transmissão de payloads em formato binário sob qualquer circunstância.
+
+c) O RPC foca na invocação remota de procedimentos e ações computacionais no servidor como se fossem funções locais tipadas, enquanto o REST organiza as interações em torno de entidades/recursos e seus estados via verbos de protocolo padronizados.
+
+d) O modelo RPC não requer contrato formal entre cliente e servidor, dispensando definições de tipos de dados.
+
+Questão 27
+Em um cenário de desastre que envolve ataque de ransomware ou sequestro de credenciais de computação em nuvem, por que a configuração de políticas de retenção imutável (como o modo WORM — Write Once, Read Many / Object Lock) em armazenamentos de backup é considerada um controle técnico de alta eficácia?
+
+a) Porque ela dobra a velocidade de gravação dos dados através do uso de compactação sem perdas em nível de bloco.
+
+b) Porque ela impede que os dados e arquivos de backup sejam deletados, modificados ou sobrescritos por qualquer usuário, inclusive contas com credenciais de privilégio administrativo mestre, durante o período de retenção programado.
+
+c) Porque ela descarta automaticamente todas as chaves de criptografia após a gravação da primeira cópia em disco.
+
+d) Porque ela elimina a necessidade de realização de testes periódicos de restauração em ambientes isolados.
+
+Questão 28
+No RabbitMQ, considere uma Exchange do tipo Topic com uma fila vinculada com o seguinte padrão de binding: financeiro.*.pix. Quais das chaves de roteamento a seguir farão a mensagem ser entregue com sucesso a essa fila?
+
+a) financeiro.pix e financeiro.banco.central.pix.
+
+b) sistema.financeiro.pix e financeiro.transferencias.ted.
+
+c) financeiro.internacional.swift.pix exclusivamente.
+
+d) financeiro.transferencias.pix e financeiro.cobranca.pix.
+
+Questão 29
+O que significa o conceito de Consistência Eventual comumente adotado em sistemas remotos que utilizam mensageria e particionamento de rede (em consonância com o Teorema CAP)?
+
+a) O sistema garante que dados nunca sofrerão replicação em mais de um servidor físico.
+
+b) Na ausência de novas atualizações, todos os nós e réplicas distribuídas do sistema eventualmente convergirão para o mesmo estado com o passar do tempo, admitindo inconsistência temporária de leitura.
+
+c) As consultas a bancos de dados remotos têm garantia matemática de retornar sempre a informação mais atualizada do nanossegundo anterior.
+
+d) O sistema trava todas as operações de gravação de forma permanente assim que qualquer nó da rede perde conectividade.
+
+Questão 30
+Em um projeto de monitoramento com observabilidade em soluções distribuídas remotas, qual é o papel desempenhado pelo identificador conhecido como Correlation ID (ou trace_id) nos cabeçalhos de requisição?
+
+a) Substituir a necessidade de chaves primárias autoincrementais nas tabelas do banco de dados relacional.
+
+b) Criptografar as senhas dos colaboradores armazenadas nos servidores de autenticação central.
+
+c) Permitir o rastreamento pontual de uma mesma requisição de negócio à medida que ela transita por múltiplos serviços, filas e bancos de dados heterogêneos ao longo da malha distribuída.
+
+d) Acelerar o processamento matemático de algoritmos de inteligência artificial na borda da rede.
+
+Questão 31
+No gRPC, o tipo de comunicação em que o cliente abre uma requisição enviando um único payload e mantém um canal aberto para receber uma sequência contínua de respostas assíncronas do servidor ao longo do tempo é classificado tecnicamente como:
+
+a) Unary RPC.
+
+b) Client-Streaming RPC.
+
+c) Server-Streaming RPC.
+
+d) Bidirectional-Streaming RPC.
+
+Questão 32
+A respeito de posturas seguras de engenharia de software distribuído em equipes remotas, analise as afirmativas a seguir sobre a cultura de Post-Mortem Blameless (pós-incidente sem culpabilização):
+
+a) Seu objetivo central é documentar o nome do desenvolvedor que cometeu o engano técnico para embasar penalidades administrativas e demissões na organização.
+
+b) Trata-se de uma metodologia restrita a projetos acadêmicos, sem viabilidade de implementação em ambientes corporativos com SLA rigoroso.
+
+c) Ela preconiza a exclusão de todos os logs de auditoria imediatamente após a resolução de uma falha para evitar responsabilização legal.
+
+d) Ela assume que a falha humana isolada decorre de lacunas nos processos técnicos, na infraestrutura e nas salvaguardas da plataforma, focando em planos de ação de engenharia para evitar a repetição sistêmica do incidente.
+
+Questão 33
+Considere um sistema remoto de pagamentos em que um cliente móvel efetua uma transação e tem sua conexão 4G interrompida antes de receber a resposta do servidor. Sabendo que o backend já havia processado a cobrança e gravado o registro com a chave de idempotência f7a2-41b9, o que acontecerá caso o aplicativo móvel reenvie a mesmíssima requisição com a mesma chave ao recuperar o sinal?
+
+a) O backend processará uma segunda cobrança na fatura do cliente, duplicando o valor transacionado.
+
+b) O servidor retornará obrigatoriamente um código de erro HTTP 403 Forbidden e bloqueará a conta do usuário.
+
+c) O backend reconhecerá a chave previamente processada, ignorará a execução duplicada e retornará a mesma resposta bem-sucedida correspondente à transação original.
+
+d) O banco de dados limpará todas as transações daquele dia para resolver a ambiguidade.
+
+Questão 34
+No Apache Kafka, o que é o Consumer Lag e qual a sua relevância operacional para a monitoria de saúde de um ecossistema distribuído?
+
+a) É o tempo em milissegundos que o cluster Kafka leva para compilar arquivos .proto recebidos via gRPC.
+
+b) É a quantidade física de memória RAM ocupada pelos arquivos de índice gravados no sistema de arquivos local do broker.
+
+c) É o atraso induzido propositalmente pelo broker para economizar largura de banda durante horários de baixa demanda.
+
+d) É a diferença numérica entre o último offset produzido em uma partição de tópico e o último offset consumido e confirmado pelo grupo de consumidores; um lag crescente indica que os consumidores não estão acompanhando a vazão de mensagens geradas.
+
+Questão 35
+Considere o gerenciamento de credenciais em ambientes produtivos remotos. Por que a prática de expor portas de bancos de dados relacionais (como a porta padrão do PostgreSQL 5432 ou do MySQL 3306) diretamente na internet pública com proteção baseada unicamente em usuário e senha é categorizada como uma vulnerabilidade crítica?
+
+a) Porque os drivers de banco de dados não suportam conexões que transitem por provedores de internet comercial.
+
+b) Porque a interface fica sujeita a ataques contínuos de força bruta automatizados (brute force), exploração de vulnerabilidades de dia zero no serviço de banco e interceptação de tráfego por certificados não verificados, devendo o acesso ser restrito a VPCs privadas, túneis seguros ou agentes Zero Trust.
+
+c) Porque o protocolo TCP impede a transmissão de queries SQL através de conexões que excedam 10 quilômetros de distância física.
+
+d) Porque bancos de dados perdem a capacidade de persistir dados em transações ACID quando conectados a portas públicas.
+
+Questão 36
+Em um cenário de integração entre uma aplicação web de frontend executada no navegador do usuário e uma malha de centenas de microsserviços internos remotos comunicando-se via gRPC/Protobuf, qual elemento arquitetural de borda é comumente empregado para fazer o roteamento e a transcodificação de protocolos?
+
+a) Um API Gateway (como Envoy, Kong ou Traefik), recebendo HTTPS/REST do navegador externo e convertendo para chamadas gRPC de alta velocidade na rede interna.
+
+b) Um banco de dados relacional configurado com replicação síncrona mestre-mestre.
+
+c) Um hub físico de rede local com cabos de par trançado blindados.
+
+d) Um software de virtualização de desktop remoto (VDI) instalado na estação de trabalho de cada cliente final.

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 03 — Ferramentas de Colaboração e Comunicação em Equipes Distribuídas | DSR</title>
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #c0001a;
+            --red-dark: #8b0013;
+            --red-soft: #ffebee;
+            --blue: #1565c0;
+            --amber: #e65100;
+            --purple: #4a148c;
+            --text: #1a1a2e;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        code, pre {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Topbar fixa */
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 0.65rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topbar-brand {
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-track {
+            height: 4px;
+            background: #e2e8f0;
+            width: 100%;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red) 0%, #e53935 100%);
+            transition: width 0.3s ease;
+        }
+
+        .slide-container {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 1.5rem 1rem 3rem;
+        }
+
+        .slide-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.06);
+            max-width: 1080px;
+            width: 100%;
+            min-height: 640px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide-header {
+            padding: 1.25rem 2rem 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .slide-badge {
+            background: var(--red-soft);
+            color: var(--red);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 0.35rem 0.85rem;
+            border-radius: 50px;
+        }
+
+        .slide-body {
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-footer {
+            padding: 1rem 2rem;
+            background: #fafafa;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slide-item {
+            display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .slide-item.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-custom {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            height: 100%;
+        }
+
+        .card-accent-red { border-left: 4px solid var(--red); }
+        .card-accent-blue { border-left: 4px solid var(--blue); }
+        .card-accent-green { border-left: 4px solid #16a34a; }
+        .card-accent-purple { border-left: 4px solid var(--purple); }
+        .card-accent-amber { border-left: 4px solid var(--amber); }
+
+        .code-box {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.83rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            border: 1px solid #313244;
+            margin: 0;
+        }
+
+        .code-box .kw { color: #cba6f7; font-weight: 600; }
+        .code-box .str { color: #a6e3a1; }
+        .code-box .cmt { color: #6c7086; font-style: italic; }
+        .code-box .fn { color: #89b4fa; }
+
+        .challenge-box {
+            background: #ffffff;
+            border: 2px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 1.5rem;
+        }
+
+        .form-label-custom {
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dot-nav {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dot-nav.active {
+            background: var(--red);
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior -->
+    <header class="topbar">
+        <a href="index.html" class="topbar-brand">
+            <i class="bi bi-arrow-left-circle text-danger fs-5"></i>
+            <span>DSR &nbsp;&middot;&nbsp; Desenvolvimento de Soluções Remotas</span>
+        </a>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge text-bg-light border fw-semibold" id="slideCount">Slide 1 de 10</span>
+        </div>
+    </header>
+
+    <!-- Barra de Progresso -->
+    <div class="progress-track">
+        <div class="progress-fill" id="progressBar" style="width: 10%;"></div>
+    </div>
+
+    <!-- Container dos Slides -->
+    <main class="slide-container">
+        <div class="slide-card">
+            <!-- Header do Slide -->
+            <div class="slide-header">
+                <span class="slide-badge" id="slideCategory">Abertura</span>
+                <div class="d-none d-sm-flex align-items-center gap-1 text-muted small">
+                    <i class="bi bi-keyboard me-1"></i> <kbd class="bg-light text-dark border">←</kbd> <kbd class="bg-light text-dark border">→</kbd>
+                </div>
+            </div>
+
+            <!-- Corpo dos Slides -->
+            <div class="slide-body">
+
+                <!-- SLIDE 1: Abertura e Metas -->
+                <div class="slide-item active" data-category="Visão Geral">
+                    <span class="text-danger fw-bold text-uppercase" style="letter-spacing:1px; font-size:0.8rem;">Anhanguera &bull; Graduação em Tecnologia</span>
+                    <h1 class="display-6 fw-bold mt-2 mb-2">Aula 03 — Ferramentas de Colaboração & Comunicação em Equipes Distribuídas</h1>
+                    <p class="lead text-muted fs-6 mb-4">Como estruturar a engenharia de software remota eliminando o caos síncrono, automatizando inspeções e implementando contratos de trabalho assíncrono orientados a evidências.</p>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="card-custom card-accent-red">
+                                <strong class="d-block text-danger mb-1"><i class="bi bi-chat-left-text me-1"></i> Comunicação</strong>
+                                <span class="small text-muted">Transição de canais síncronos para fluxos assíncronos e sem bloqueios.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-custom card-accent-blue">
+                                <strong class="d-block text-primary mb-1"><i class="bi bi-git me-1"></i> Git & PR Flow</strong>
+                                <span class="small text-muted">Pull Requests como artefato central de documentação e revisão técnica.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-custom card-accent-purple">
+                                <strong class="d-block text-purple mb-1"><i class="bi bi-file-earmark-code me-1"></i> Doc-First & ADRs</strong>
+                                <span class="small text-muted">Arquiteturas decididas e registradas em repositório versionado.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card-custom card-accent-amber">
+                                <strong class="d-block text-warning mb-1"><i class="bi bi-award me-1"></i> Desafio Prático</strong>
+                                <span class="small text-muted">Laboratório interativo completo com simulador de PR e gerador de ADR.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 2: O Custo do Síncrono e Princípios Assíncronos -->
+                <div class="slide-item" data-category="Comunicação Assíncrona">
+                    <h3 class="fw-bold mb-2">A Falácia do "Tempo Real": Por que o Remoto Falha?</h3>
+                    <p class="text-muted small mb-4">O erro mais comum ao migrar equipes para o trabalho remoto é tentar reproduzir o escritório presencial via chamadas de vídeo ininterruptas e chats instantâneos.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card-custom border-danger">
+                                <h6 class="fw-bold text-danger mb-2"><i class="bi bi-exclamation-triangle-fill me-1"></i> A "Ilusão Síncrona" & Sobrecarga</h6>
+                                <ul class="small text-secondary ps-3 mb-3" style="line-height: 1.8;">
+                                    <li><strong>Fragmentação Cognitiva:</strong> Notificações de chat síncrono interrompem o estado de foco profundo (<em>Deep Work</em>), exigindo tempo excessivo para retomada.</li>
+                                    <li><strong>Exclusão por Fuso Horário:</strong> Reuniões síncronas forçam horários insalubres e criam divisões no time.</li>
+                                    <li><strong>Perda Histórica:</strong> Acordos verbais rápidos não ficam auditáveis para os demais engenheiros.</li>
+                                </ul>
+                                <div class="p-2 rounded bg-danger bg-opacity-10 text-danger small fw-semibold">
+                                    Resultado: Sensação de trabalhar muito e entregar pouco (Fadiga de Reuniões).
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-custom border-success">
+                                <h6 class="fw-bold text-success mb-2"><i class="bi bi-check-circle-fill me-1"></i> Os 4 Mandamentos do Assíncrono</h6>
+                                <ol class="small text-secondary ps-3 mb-3" style="line-height: 1.8;">
+                                    <li><strong>Contexto Completo no 1º Contato:</strong> Toda mensagem deve conter objetivo, reprodução, links, logs e prazo esperado.</li>
+                                    <li><strong>Tempo de Resposta Ponderado (SLA):</strong> Estabelecer janelas de resposta assíncrona (ex.: 2h a 4h) sem imediatismos.</li>
+                                    <li><strong>Transmissão Escrita por Padrão:</strong> Se não foi documentado, o requisito não existe.</li>
+                                    <li><strong>Síncrono Somente em Impasses:</strong> Reuniões curtas, pautadas e com encerramento em ata escrita.</li>
+                                </ol>
+                                <div class="p-2 rounded bg-success bg-opacity-10 text-success small fw-semibold">
+                                    Resultado: Foco contínuo, rastreabilidade técnica e respeito aos fusos.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 3: Matriz de Ferramentas e Taxonomia de Canais -->
+                <div class="slide-item" data-category="Taxonomia de Canais">
+                    <h3 class="fw-bold mb-2">Matriz de Comunicação: Ferramenta Certa no Canal Certo</h3>
+                    <p class="text-muted small mb-3">A equipe precisa acordar categoricamente onde cada tipo de informação deve residir para evitar entropia informacional.</p>
+
+                    <div class="table-responsive border rounded-3 mb-3">
+                        <table class="table table-hover align-middle mb-0 small">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nível de Urgência</th>
+                                    <th>Canal Adequado</th>
+                                    <th>Exemplos de Ferramentas</th>
+                                    <th>Casos de Uso Típicos</th>
+                                    <th>Tempo Médio de Espera (SLA)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge bg-danger">Incidente Crítico</span></td>
+                                    <td><strong>Síncrono Emergencial</strong></td>
+                                    <td>PagerDuty, Ligação, War Room</td>
+                                    <td>Ambiente de produção fora do ar, vazamento de dados críticos.</td>
+                                    <td>&lt; 15 minutos</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-warning text-dark">Alinhamento Rápido</span></td>
+                                    <td><strong>Chat Semipresencial</strong></td>
+                                    <td>Slack, Discord, Teams, Mattermost</td>
+                                    <td>Tirar dúvidas pontuais em tópicos públicos (evitar DM privada).</td>
+                                    <td>1 a 3 horas</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-primary">Construção & Entrega</span></td>
+                                    <td><strong>Plataforma de Engenharia</strong></td>
+                                    <td>GitHub PRs, GitLab MRs, Jira, Linear</td>
+                                    <td>Code review, refinamento de tarefas, testes e aprovações.</td>
+                                    <td>4 a 24 horas</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-secondary">Conhecimento Perene</span></td>
+                                    <td><strong>Base Documental Versionada</strong></td>
+                                    <td>Notion, Confluence, GitBook, Wiki</td>
+                                    <td>Manuais de API, guias de onboarding, arquitetura de sistemas.</td>
+                                    <td>Consulta passiva permanente</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-light border p-2 small text-muted mb-0">
+                        <i class="bi bi-info-circle text-primary me-1"></i> <strong>Regra de Ouro:</strong> Nunca discuta regras de negócio em chats privados (DMs). Conduza discussões em canais públicos ou diretamente na issue correspondente.
+                    </div>
+                </div>
+
+                <!-- SLIDE 4: Git Flow e Gestão de Branches para Equipes Remotas -->
+                <div class="slide-item" data-category="Fluxo de Versão">
+                    <h3 class="fw-bold mb-2">Estratégia de Branching: Trunk-Based vs. Git Flow</h3>
+                    <p class="text-muted small mb-3">Equipes remotas sofrem quando mantêm branches longas (*merge hell*). O alinhamento de versionamento é a base da integração estável.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card-custom">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-primary mb-0"><i class="bi bi-diagram-2 me-1"></i> GitHub Flow / Trunk-Based</h6>
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success">Recomendado no Remoto</span>
+                                </div>
+                                <p class="small text-muted mb-2">Branches curtas (1 a 2 dias), focadas em pequenas alterações que vão direto para a branch principal (<code>main</code>) após aprovação do CI.</p>
+                                <pre class="code-box"><span class="cmt"># 1. Crie a branch específica com convenção clara</span>
+git checkout -b feat/oauth-google-provider
+
+<span class="cmt"># 2. Commits atômicos e padronizados</span>
+git commit -m <span class="str">"feat(auth): add google oauth token validation"</span>
+
+<span class="cmt"># 3. Abra o Pull Request imediatamente para revisão assíncrona</span>
+git push origin feat/oauth-google-provider</pre>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card-custom">
+                                <h6 class="fw-bold text-danger mb-2"><i class="bi bi-git me-1"></i> Convenção Semântica de Commits</h6>
+                                <p class="small text-muted mb-2">O padrão <strong>Conventional Commits</strong> permite automação transparente de changelog e release:</p>
+                                <ul class="small text-secondary ps-3 mb-0" style="line-height: 1.8;">
+                                    <li><code>feat:</code> Nova funcionalidade adicionada ao software.</li>
+                                    <li><code>fix:</code> Correção de bug no código de produção.</li>
+                                    <li><code>refactor:</code> Mudança interna sem alterar comportamento externo.</li>
+                                    <li><code>chore:</code> Ajuste em configurações, dependências ou builds de CI.</li>
+                                    <li><code>test:</code> Adição ou adequação de testes automatizados.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 5: A Anatomia de um Pull Request de Alto Impacto -->
+                <div class="slide-item" data-category="Engenharia de PRs">
+                    <h3 class="fw-bold mb-2">A Anatomia do Pull Request de Alto Nível</h3>
+                    <p class="text-muted small mb-3">No modelo remoto, o PR substitui a conversa de mesa. Um PR bem documentado evita idas e vindas que atrasam a entrega por dias.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-5">
+                            <div class="card-custom border-primary">
+                                <h6 class="fw-bold text-primary mb-2"><i class="bi bi-check2-all me-1"></i> Componentes Obrigatórios</h6>
+                                <div class="d-flex flex-column gap-2 small">
+                                    <div class="p-2 border rounded bg-white">
+                                        <strong>1. Contexto & Motivação:</strong>
+                                        <p class="text-muted mb-0">Qual problema ou bug este código resolve? Link direto para o ticket.</p>
+                                    </div>
+                                    <div class="p-2 border rounded bg-white">
+                                        <strong>2. Roteiro de Teste:</strong>
+                                        <p class="text-muted mb-0">Como o revisor valida de forma autônoma? Endpoints, comandos e mocks.</p>
+                                    </div>
+                                    <div class="p-2 border rounded bg-white">
+                                        <strong>3. Riscos e Dependências:</strong>
+                                        <p class="text-muted mb-0">Exige migração de banco de dados ou novas variáveis de ambiente?</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7">
+                            <div class="card-custom">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-dark mb-0">Template: <code>.github/PULL_REQUEST_TEMPLATE.md</code></h6>
+                                    <span class="badge text-bg-dark">Markdown</span>
+                                </div>
+                                <pre class="code-box">## 📌 Descrição da Alteração
+Resolve a Issue #104. Implementa rate limiting na rota de login via Redis.
+
+## 🧪 Como Testar
+1. Suba o container com `docker compose up -d redis`.
+2. Dispare 10 requisições seguidas para `POST /api/auth/login`.
+3. Verifique se a 6ª requisição retorna HTTP 429 Too Many Requests.
+
+## 📋 Checklist
+- [x] Testes unitários adicionados e passando no CI
+- [x] Variável `REDIS_URL` documentada no `.env.example`
+- [x] Sem consultas SQL N+1 detectadas</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 6: CI/CD como Filtro Assíncrono -->
+                <div class="slide-item" data-category="Automação CI/CD">
+                    <h3 class="fw-bold mb-2">CI/CD: O Revisor que Nunca Dorme</h3>
+                    <p class="text-muted small mb-3">Revisores humanos nunca devem gastar tempo verificando formatação ou sintaxe básica. A automação protege o tempo cognitivo do time distribuído.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card-custom">
+                                <h6 class="fw-bold text-primary mb-2"><i class="bi bi-cpu me-1"></i> Papel da Integração Contínua</h6>
+                                <p class="small text-muted mb-3">Ao disparar um PR, robôs de CI executam etapas sequenciais de inspeção automática:</p>
+                                <ul class="small text-secondary ps-3 mb-0" style="line-height: 1.8;">
+                                    <li><strong>Linters & Formatters:</strong> Bloqueiam discussões subjetivas de formatação (ESLint, Prettier, Black, etc.).</li>
+                                    <li><strong>Testes Automatizados:</strong> Execução das suítes de testes unitários e integrados antes da revisão humana.</li>
+                                    <li><strong>Security Scanners (SAST):</strong> Verificação automatizada de vulnerabilidades conhecidas em pacotes externos.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card-custom">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-dark mb-0">Pipeline GitHub Actions: <code>.github/workflows/ci.yml</code></h6>
+                                    <span class="badge text-bg-secondary">YAML</span>
+                                </div>
+                                <pre class="code-box"><span class="kw">name</span>: CI Workflow
+<span class="kw">on</span>: [pull_request]
+<span class="kw">jobs</span>:
+  <span class="fn">verify</span>:
+    <span class="kw">runs-on</span>: ubuntu-latest
+    <span class="kw">steps</span>:
+      - <span class="kw">uses</span>: actions/checkout@v4
+      - <span class="kw">name</span>: Run Linter
+        <span class="kw">run</span>: npm run lint
+      - <span class="kw">name</span>: Execute Test Suite
+        <span class="kw">run</span>: npm test -- --coverage
+      - <span class="kw">name</span>: Dependency Audit
+        <span class="kw">run</span>: npm audit --audit-level=high</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 7: Decisões Arquiteturais com ADRs -->
+                <div class="slide-item" data-category="Documentação Técnica">
+                    <h3 class="fw-bold mb-2">Cultura Documentation-First: O Poder das ADRs</h3>
+                    <p class="text-muted small mb-3">Em times remotos, as decisões técnicas precisam ficar registradas no próprio código. As <strong>Architecture Decision Records (ADRs)</strong> documentam o histórico técnico de longo prazo.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="card-custom card-accent-purple">
+                                <h6 class="fw-bold text-purple mb-2">O que é uma ADR?</h6>
+                                <p class="small text-muted mb-2">É um documento de texto leve (Markdown) armazenado em <code>docs/adr/</code> que descreve uma decisão de arquitetura, o contexto e os prós e contras ponderados.</p>
+                                <div class="badge bg-purple text-white p-2 w-100 text-start">
+                                    <i class="bi bi-clock-history me-1"></i> Evita retrabalho e questionamentos cíclicos ao integrar novos desenvolvedores.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="card-custom">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-dark mb-0">Exemplo: <code>docs/adr/0004-adocao-redis-cache.md</code></h6>
+                                    <span class="badge text-bg-dark">ADR Template</span>
+                                </div>
+                                <pre class="code-box"># 4. Adoção de Redis para Cache de Sessão e Rate Limiting
+
+## Status: Aceito (2026-09-02)
+
+## Contexto
+O tráfego na API aumentou 300%. Manter sessões e contadores de limite
+no banco relacional está esgotando o pool de conexões.
+
+## Decisão
+Implementar Redis in-memory para tokens transitórios e rate limiting.
+
+## Consequências
+- Positivas: Latência dos endpoints autenticados reduzida para < 45ms.
+- Trade-offs: Nova dependência de infraestrutura e gestão de cluster.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 8: Gestão de Fluxo: Kanban, Limites de WIP e DoD -->
+                <div class="slide-item" data-category="Gestão de Fluxo">
+                    <h3 class="fw-bold mb-2">Gestão Visual do Fluxo: Limitando o WIP e Definindo DoD</h3>
+                    <p class="text-muted small mb-3">No modelo assíncrono, a multitarefa desordenada destrói os prazos. Gerenciar o fluxo exige limites claros de capacidade.</p>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="card-custom border-danger">
+                                <h6 class="fw-bold text-danger mb-2"><i class="bi bi-funnel-fill me-1"></i> Limite de WIP (Work In Progress)</h6>
+                                <p class="small text-muted mb-2">Determina o teto máximo de itens na coluna <em>Em Desenvolvimento</em> ou <em>Em Code Review</em> simultaneamente.</p>
+                                <div class="alert alert-danger p-2 small mb-0">
+                                    <strong>Princípio:</strong> "Pare de começar e comece a terminar." Reduz o tempo de espera das revisões.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card-custom border-primary">
+                                <h6 class="fw-bold text-primary mb-2"><i class="bi bi-card-checklist me-1"></i> Definition of Done (DoD)</h6>
+                                <p class="small text-muted mb-2">Critério inegociável de quando uma tarefa é considerada pronta:</p>
+                                <ul class="small text-secondary ps-3 mb-0" style="line-height: 1.6;">
+                                    <li>Código mergeado na branch principal.</li>
+                                    <li>Testes automatizados verdes no CI.</li>
+                                    <li>Documentação de API atualizada.</li>
+                                    <li>Deploy concluído em homologação.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card-custom border-success">
+                                <h6 class="fw-bold text-success mb-2"><i class="bi bi-box-arrow-in-right me-1"></i> Definition of Ready (DoR)</h6>
+                                <p class="small text-muted mb-2">Critério para uma tarefa sair do Backlog e entrar em desenvolvimento:</p>
+                                <ul class="small text-secondary ps-3 mb-0" style="line-height: 1.6;">
+                                    <li>Critérios de aceite claros e objetivos.</li>
+                                    <li>Contrato de interface ou schema definido.</li>
+                                    <li>Dependências externas mapeadas.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 9: O DESAFIO PRÁTICO DA AULA (SIMULADOR & GERADOR) -->
+                <div class="slide-item" data-category="Laboratório Prático">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h3 class="fw-bold text-danger mb-0"><i class="bi bi-terminal-fill me-1"></i> Desafio Prático da Aula 03</h3>
+                        <span class="badge bg-danger">Atividade Avaliativa</span>
+                    </div>
+                    <p class="text-muted small mb-3"><strong>Cenário:</strong> Você é o Tech Lead de uma equipe remota. O time está enfrentando quebras constantes por falta de contexto nos PRs e decisões não documentadas. Complete os testes abaixo:</p>
+
+                    <div class="challenge-box">
+                        <ul class="nav nav-pills mb-3" id="challengeTabs" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active btn-sm" id="tab-pr" data-bs-toggle="pill" data-bs-target="#content-pr" type="button"><i class="bi bi-git me-1"></i> Parte 1: Elaborar Pull Request Técnico</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link btn-sm" id="tab-adr" data-bs-toggle="pill" data-bs-target="#content-adr" type="button"><i class="bi bi-journal-check me-1"></i> Parte 2: Redigir ADR Arquitetural</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" id="challengeContent">
+                            <!-- PARTE 1: PR TEMPLATE -->
+                            <div class="tab-pane fade show active" id="content-pr">
+                                <p class="small text-muted mb-3">Preencha o formulário abaixo simulando a submissão de um PR para o serviço de autenticação com Redis. Ao terminar, clique em <strong>Validar PR</strong>.</p>
+                                
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label-custom">Título do PR (Conventional Commit)</label>
+                                        <input type="text" class="form-control form-control-sm" id="prTitle" placeholder="Ex: feat(auth): add redis rate limiting to login endpoint">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label-custom">Issue Relacionada</label>
+                                        <input type="text" class="form-control form-control-sm" id="prIssue" placeholder="Ex: Fixes #42 - High latency under brute force attempts">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label-custom">Descrição Técnica & Motivação</label>
+                                        <textarea class="form-control form-control-sm" id="prDesc" rows="2" placeholder="Explique por que esta alteração é necessária e qual a estratégia técnica adotada..."></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label-custom">Como a Equipe Remota Deve Testar (Instruções Passo a Passo)</label>
+                                        <textarea class="form-control form-control-sm" id="prTesting" rows="2" placeholder="1. Comandos de inicialização local...&#10;2. Requisição de teste com curl ou Postman...&#10;3. Resposta esperada..."></textarea>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-primary fw-semibold" onclick="validatePR()">
+                                    <i class="bi bi-check-circle me-1"></i> Validar Pré-Requisitos do PR
+                                </button>
+                                <div id="prFeedback" class="mt-2 small"></div>
+                            </div>
+
+                            <!-- PARTE 2: ADR -->
+                            <div class="tab-pane fade" id="content-adr">
+                                <p class="small text-muted mb-3">Redija o registro formal de decisão arquitetural (ADR) para a escolha da ferramenta de mensageria assíncrona do projeto.</p>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-8">
+                                        <label class="form-label-custom">Título da Decisão</label>
+                                        <input type="text" class="form-control form-control-sm" id="adrTitle" placeholder="Ex: ADR 005 - Adoção do RabbitMQ para Filas de Tarefas Assíncronas">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label-custom">Status</label>
+                                        <select class="form-select form-select-sm" id="adrStatus">
+                                            <option value="Aceito">Aceito / Aprovado</option>
+                                            <option value="Em Revisão">Em Revisão (RFC)</option>
+                                            <option value="Rejeitado">Rejeitado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label-custom">Contexto e Problema de Negócio</label>
+                                        <textarea class="form-control form-control-sm" id="adrContext" rows="2" placeholder="Descreva o problema de escala ou gargalo que motivou esta avaliação arquitetural..."></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label-custom">Consequências (Positivas e Trade-offs)</label>
+                                        <textarea class="form-control form-control-sm" id="adrConsequences" rows="2" placeholder="O que ganhamos com essa escolha e quais custos operacionais adicionais teremos que suportar..."></textarea>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-success fw-semibold" onclick="validateADR()">
+                                    <i class="bi bi-file-earmark-check me-1"></i> Validar Estrutura da ADR
+                                </button>
+                                <div id="adrFeedback" class="mt-2 small"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 10: Síntese e Próximos Passos -->
+                <div class="slide-item" data-category="Conclusão & Próximos Passos">
+                    <h3 class="fw-bold mb-2">Síntese da Aula & Visão Geral da Aula 04</h3>
+                    <p class="text-muted small mb-4">Com a infraestrutura de comunicação, versionamento e documentação estruturada, o próximo passo crítico é a continuidade operacional.</p>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card-custom border-primary">
+                                <h6 class="fw-bold text-primary mb-2"><i class="bi bi-bookmark-check-fill me-1"></i> O que Dominamos Hoje:</h6>
+                                <ul class="small text-secondary ps-3 mb-0" style="line-height: 1.8;">
+                                    <li>Comunicação assíncrona orientada a evidências e sem reuniões excessivas.</li>
+                                    <li>Pull Requests como centro de documentação e revisão técnica.</li>
+                                    <li>Automação de validações de código via pipelines de CI/CD.</li>
+                                    <li>Registro de decisões históricas com ADRs versionadas.</li>
+                                    <li>Controle de fluxo de trabalho remoto com Limites de WIP e DoD.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card-custom border-danger">
+                                <h6 class="fw-bold text-danger mb-2"><i class="bi bi-shield-lock-fill me-1"></i> O que Veremos na Aula 04: Gestão de Riscos Remotos</h6>
+                                <p class="small text-muted mb-2">Como garantir a segurança, integridade e resiliência em ambientes distribuídos:</p>
+                                <ul class="small text-secondary ps-3 mb-0" style="line-height: 1.8;">
+                                    <li>Gerenciamento seguro de segredos e credenciais de produção.</li>
+                                    <li>Matriz de Riscos Operacionais para indisponibilidade de rede.</li>
+                                    <li>Estratégias de Disaster Recovery e backups automatizados em nuvem.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center p-3 rounded bg-light border">
+                        <div>
+                            <strong class="d-block text-dark">Dúvidas ou Atividades da Disciplina?</strong>
+                            <span class="small text-muted">Acesse o laboratório dedicado de governança ou retorne à página inicial.</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="desafios3.html" class="btn btn-outline-danger btn-sm px-3 fw-semibold">
+                                <i class="bi bi-pencil-square me-1"></i> Abrir Laboratório Dedicado
+                            </a>
+                            <a href="index.html" class="btn btn-danger btn-sm px-3 fw-semibold">
+                                <i class="bi bi-house-door-fill me-1"></i> Ir para o Portal
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Rodapé / Controles -->
+            <div class="slide-footer">
+                <button class="btn btn-outline-secondary btn-sm px-3" id="prevBtn" onclick="changeSlide(-1)" disabled>
+                    <i class="bi bi-chevron-left me-1"></i> Anterior
+                </button>
+                <div class="d-none d-md-flex align-items-center gap-2" id="dotsContainer"></div>
+                <button class="btn btn-danger btn-sm px-3" id="nextBtn" onclick="changeSlide(1)">
+                    Próximo <i class="bi bi-chevron-right ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const slides = document.querySelectorAll('.slide-item');
+        const dotsContainer = document.getElementById('dotsContainer');
+        const slideCountEl = document.getElementById('slideCount');
+        const slideCatEl = document.getElementById('slideCategory');
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+
+        // Marcadores
+        slides.forEach((_, idx) => {
+            const dot = document.createElement('span');
+            dot.className = `dot-nav ${idx === 0 ? 'active' : ''}`;
+            dot.title = `Slide ${idx + 1}`;
+            dot.onclick = () => goToSlide(idx);
+            dotsContainer.appendChild(dot);
+        });
+
+        function updateUI() {
+            slides.forEach((s, idx) => {
+                s.classList.toggle('active', idx === currentIndex);
+            });
+
+            Array.from(dotsContainer.children).forEach((dot, idx) => {
+                dot.className = `dot-nav ${idx === currentIndex ? 'active' : ''}`;
+            });
+
+            slideCountEl.textContent = `Slide ${currentIndex + 1} de ${slides.length}`;
+            slideCatEl.innerHTML = `Aula 03 &bull; ${slides[currentIndex].getAttribute('data-category')}`;
+            progressBar.style.width = `${((currentIndex + 1) / slides.length) * 100}%`;
+
+            prevBtn.disabled = currentIndex === 0;
+
+            if (currentIndex === slides.length - 1) {
+                nextBtn.innerHTML = 'Concluir Aula <i class="bi bi-check2-circle ms-1"></i>';
+            } else {
+                nextBtn.innerHTML = 'Próximo <i class="bi bi-chevron-right ms-1"></i>';
+            }
+        }
+
+        function changeSlide(direction) {
+            const newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < slides.length) {
+                currentIndex = newIndex;
+                updateUI();
+            } else if (newIndex === slides.length) {
+                window.location.href = 'index.html#aulas';
+            }
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateUI();
+        }
+
+        // Navegação por teclado
+        document.addEventListener('keydown', (e) => {
+            if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) {
+                return;
+            }
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Validação Desafio 1 (PR)
+        function validatePR() {
+            const title = document.getElementById('prTitle').value.trim();
+            const issue = document.getElementById('prIssue').value.trim();
+            const desc = document.getElementById('prDesc').value.trim();
+            const testing = document.getElementById('prTesting').value.trim();
+            const feedback = document.getElementById('prFeedback');
+
+            const validPrefixes = ['feat:', 'fix:', 'refactor:', 'chore:', 'test:', 'docs:'];
+            const hasValidPrefix = validPrefixes.some(prefix => title.toLowerCase().startsWith(prefix) || title.toLowerCase().includes('('));
+
+            if (!title || !issue || !desc || !testing) {
+                feedback.innerHTML = `<span class="text-danger fw-semibold"><i class="bi bi-x-circle me-1"></i> Preencha todos os 4 campos do formulário para validar o PR.</span>`;
+                return;
+            }
+
+            if (!hasValidPrefix) {
+                feedback.innerHTML = `<span class="text-warning fw-semibold"><i class="bi bi-exclamation-triangle me-1"></i> Atenção ao título: utilize o padrão Conventional Commits (ex: <code>feat(escopo): descrição</code> ou <code>fix: descrição</code>).</span>`;
+                return;
+            }
+
+            feedback.innerHTML = `<div class="p-2 rounded bg-success bg-opacity-10 text-success fw-semibold">
+                <i class="bi bi-check-circle-fill me-1"></i> PR Técnico Aprovado! Estrutura atende aos requisitos de clareza, rastreabilidade e testabilidade para equipes remotas.
+            </div>`;
+        }
+
+        // Validação Desafio 2 (ADR)
+        function validateADR() {
+            const title = document.getElementById('adrTitle').value.trim();
+            const context = document.getElementById('adrContext').value.trim();
+            const consequences = document.getElementById('adrConsequences').value.trim();
+            const feedback = document.getElementById('adrFeedback');
+
+            if (!title || !context || !consequences) {
+                feedback.innerHTML = `<span class="text-danger fw-semibold"><i class="bi bi-x-circle me-1"></i> Preencha todos os campos para homologar o registro da ADR.</span>`;
+                return;
+            }
+
+            if (context.length < 25 || consequences.length < 25) {
+                feedback.innerHTML = `<span class="text-warning fw-semibold"><i class="bi bi-exclamation-triangle me-1"></i> O contexto e as consequências devem ser detalhados para garantir que futuros engenheiros compreendam os trade-offs.</span>`;
+                return;
+            }
+
+            feedback.innerHTML = `<div class="p-2 rounded bg-success bg-opacity-10 text-success fw-semibold">
+                <i class="bi bi-check-circle-fill me-1"></i> Registro de Decisão Arquitetural (ADR) Homologado! Esse artefato já pode ser versionado em <code>docs/adr/</code>.
+            </div>`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade 04 — Gestão de Riscos Remotos | DSR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --amber:#e65100; --amber-dark:#b23c00; --border:#e2e8f0; --bg:#f8fafc; --text:#1e293b; }
+        body { font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); margin:0; padding-bottom:3rem; }
+        .topbar { background:#fff; border-bottom:1px solid var(--border); padding:.75rem 1.5rem; position:sticky; top:0; z-index:100; }
+        .hero { background:linear-gradient(135deg,var(--amber-dark),var(--amber)); color:#fff; padding:2.5rem 1rem; }
+        .card-lab { background:#fff; border:1px solid var(--border); border-radius:14px; box-shadow:0 4px 16px rgba(0,0,0,.04); padding:1.5rem; margin-bottom:1.5rem; }
+        .question-number { width:32px; height:32px; border-radius:50%; background:#fff3e0; color:var(--amber-dark); display:inline-flex; align-items:center; justify-content:center; font-weight:800; flex-shrink:0; }
+        .form-label { font-weight:700; font-size:.85rem; color:#334155; }
+        .required::after { content:' *'; color:#dc2626; }
+        .submission-box { background:#fff7ed; border:1px solid #fed7aa; border-radius:12px; padding:1rem 1.25rem; }
+        @media print { .topbar,.hero,.no-print,#feedback { display:none!important; } body { background:#fff; padding:0; } .card-lab { box-shadow:none; border:1px solid #cbd5e1; break-inside:avoid; } }
+    </style>
+</head>
+<body>
+    <header class="topbar no-print">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="index.html" class="text-dark fw-bold text-decoration-none d-flex align-items-center gap-2"><i class="bi bi-arrow-left-circle text-warning fs-5"></i><span>Voltar ao Portal</span></a>
+            <a href="dsr4.html" class="btn btn-outline-danger btn-sm fw-semibold"><i class="bi bi-play-circle me-1"></i> Abrir Aula 04</a>
+        </div>
+    </header>
+    <div class="hero">
+        <div class="container">
+            <span class="badge bg-white text-dark fw-bold mb-2">Atividade Avaliativa 04</span>
+            <h1 class="fw-bold mb-2">Laboratório de Gestão de Riscos Remotos</h1>
+            <p class="text-white-50 mb-0">Analise um incidente de segurança, priorize os riscos e proponha um plano de continuidade para uma equipe distribuída.</p>
+        </div>
+    </div>
+    <main class="container mt-4">
+        <div class="card-lab">
+            <h5 class="fw-bold mb-3"><i class="bi bi-people-fill text-warning me-2"></i>Identificação da dupla</h5>
+            <p class="small text-muted">Preencha os dois nomes. A atividade deve ser realizada em dupla.</p>
+            <div class="row g-3">
+                <div class="col-md-6"><label for="student1" class="form-label required">Aluno 1</label><input id="student1" class="form-control" type="text" placeholder="Nome completo"></div>
+                <div class="col-md-6"><label for="student2" class="form-label required">Aluno 2</label><input id="student2" class="form-control" type="text" placeholder="Nome completo"></div>
+                <div class="col-md-6"><label for="className" class="form-label">Turma / período</label><input id="className" class="form-control" type="text" placeholder="Ex.: 4º semestre - noite"></div>
+                <div class="col-md-6"><label for="date" class="form-label">Data</label><input id="date" class="form-control" type="date"></div>
+            </div>
+        </div>
+
+        <div class="card-lab">
+            <h5 class="fw-bold mb-3"><i class="bi bi-shield-exclamation text-warning me-2"></i>Cenário-problema</h5>
+            <p class="mb-2">Durante uma investigação, a equipe encontra um token de produção exposto em um log compartilhado. O log ficou acessível por 40 minutos e não há certeza de quem o consultou. Ao mesmo tempo, o provedor principal apresenta instabilidade.</p>
+            <p class="small text-muted mb-0"><strong>Entrega:</strong> respondam às questões com justificativas técnicas. Evitem respostas de uma única frase.</p>
+        </div>
+
+        <form id="activityForm" novalidate>
+            <div class="card-lab">
+                <div class="d-flex gap-3 align-items-start mb-3"><span class="question-number">1</span><div><h5 class="fw-bold mb-1">Contenção e resposta imediata</h5><p class="small text-muted mb-0">Descreva a sequência de ações para conter o incidente sem destruir evidências.</p></div></div>
+                <textarea id="answer1" class="form-control answer" rows="5" placeholder="Ex.: revogar o token, preservar logs, verificar acessos..." required></textarea>
+            </div>
+            <div class="card-lab">
+                <div class="d-flex gap-3 align-items-start mb-3"><span class="question-number">2</span><div><h5 class="fw-bold mb-1">Matriz de risco</h5><p class="small text-muted mb-0">Escolha uma probabilidade de 1 a 5 e um impacto de 1 a 5. Calcule o nível do risco e explique a prioridade.</p></div></div>
+                <div class="row g-3 mb-3"><div class="col-md-6"><label for="probability" class="form-label required">Probabilidade</label><select id="probability" class="form-select" required><option value="">Selecione</option><option>1 - Muito baixa</option><option>2 - Baixa</option><option>3 - Média</option><option>4 - Alta</option><option>5 - Muito alta</option></select></div><div class="col-md-6"><label for="impact" class="form-label required">Impacto</label><select id="impact" class="form-select" required><option value="">Selecione</option><option>1 - Muito baixo</option><option>2 - Baixo</option><option>3 - Médio</option><option>4 - Alto</option><option>5 - Crítico</option></select></div></div>
+                <textarea id="answer2" class="form-control answer" rows="4" placeholder="Informe o cálculo (probabilidade x impacto), a classificação e a justificativa." required></textarea>
+            </div>
+            <div class="card-lab">
+                <div class="d-flex gap-3 align-items-start mb-3"><span class="question-number">3</span><div><h5 class="fw-bold mb-1">Prevenção e credenciais</h5><p class="small text-muted mb-0">Proponha pelo menos quatro controles para evitar a repetição do vazamento.</p></div></div>
+                <textarea id="answer3" class="form-control answer" rows="5" placeholder="Considere cofre de segredos, menor privilégio, rotação, mascaramento de logs..." required></textarea>
+            </div>
+            <div class="card-lab">
+                <div class="d-flex gap-3 align-items-start mb-3"><span class="question-number">4</span><div><h5 class="fw-bold mb-1">Continuidade e recuperação</h5><p class="small text-muted mb-0">Defina um RTO, um RPO e um plano de recuperação para a instabilidade do provedor.</p></div></div>
+                <textarea id="answer4" class="form-control answer" rows="5" placeholder="Informe tempos justificáveis, responsável, backup, failover e teste de restauração." required></textarea>
+            </div>
+            <div class="card-lab">
+                <div class="d-flex gap-3 align-items-start mb-3"><span class="question-number">5</span><div><h5 class="fw-bold mb-1">Lições aprendidas</h5><p class="small text-muted mb-0">Indique duas evidências que a equipe deve produzir após o incidente e explique sua utilidade.</p></div></div>
+                <textarea id="answer5" class="form-control answer" rows="4" placeholder="Ex.: relatório do incidente, atualização do runbook, teste de restauração..." required></textarea>
+            </div>
+
+            <div class="card-lab no-print">
+                <div id="feedback" class="small mb-3" role="status"></div>
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-warning fw-semibold" onclick="downloadPdf()"><i class="bi bi-file-earmark-pdf me-1"></i>Baixar atividade em PDF</button>
+                    <button type="button" class="btn btn-outline-dark fw-semibold" onclick="printActivity()"><i class="bi bi-printer me-1"></i>Imprimir / salvar PDF</button>
+                    <a class="btn btn-outline-danger fw-semibold" href="mailto:dsr@netminas.com?subject=Atividade%2004&body=Professor%20Maximiano%2C%20a%20atividade%2004%20foi%20preenchida.%20O%20PDF%20est%C3%A1%20anexado.%"><i class="bi bi-envelope me-1"></i>Abrir e-mail para envio</a>
+                </div>
+                <div class="submission-box mt-3 small"><strong>Envio:</strong> baixe o PDF, anexe-o ao e-mail e envie para <strong>dsr@netminas.com</strong>.<br><strong>Professor:</strong> Maximiano &nbsp;·&nbsp; <strong>Assunto:</strong> Atividade 04</div>
+            </div>
+        </form>
+        <div class="submission-box d-none" id="pdfHeader"></div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const fields = ['student1','student2','className','date','answer1','probability','impact','answer2','answer3','answer4','answer5'];
+        document.getElementById('date').value = new Date().toISOString().slice(0,10);
+        function getData() { return Object.fromEntries(fields.map(id => [id, document.getElementById(id).value.trim()])); }
+        function validate(data) {
+            const required = ['student1','student2','answer1','probability','impact','answer2','answer3','answer4','answer5'];
+            const missing = required.filter(id => !data[id]);
+            const feedback = document.getElementById('feedback');
+            if (missing.length) { feedback.innerHTML = '<span class="text-danger fw-semibold"><i class="bi bi-exclamation-circle me-1"></i>Preencha os dois nomes, a matriz e todas as respostas antes de gerar o PDF.</span>'; return false; }
+            feedback.innerHTML = '<span class="text-success fw-semibold"><i class="bi bi-check-circle me-1"></i>Atividade validada. O PDF está pronto para ser baixado e anexado ao e-mail.</span>'; return true;
+        }
+        function addWrapped(doc, text, x, y, width, lineHeight = 5) { const lines = doc.splitTextToSize(text || '-', width); doc.text(lines, x, y); return y + lines.length * lineHeight; }
+        function downloadPdf() {
+            const data = getData(); if (!validate(data)) return;
+            const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit:'mm', format:'a4' }); const margin = 16; const width = 178; let y = 18;
+            doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.text('ATIVIDADE 04 - GESTAO DE RISCOS REMOTOS', margin, y); y += 9;
+            doc.setFontSize(10); doc.setFont('helvetica','normal'); y = addWrapped(doc, 'DSR - Desenvolvimento de Solucoes Remotas | Professor Maximiano', margin, y, width); y += 4;
+            doc.setDrawColor(220, 220, 220); doc.line(margin, y, 194, y); y += 8;
+            doc.setFont('helvetica','bold'); doc.text('IDENTIFICACAO', margin, y); y += 6; doc.setFont('helvetica','normal');
+            y = addWrapped(doc, `Aluno 1: ${data.student1}    Aluno 2: ${data.student2}`, margin, y, width); y += 5; y = addWrapped(doc, `Turma / periodo: ${data.className || '-'}    Data: ${data.date || '-'}`, margin, y, width); y += 8;
+            const questions = [['1. CONTENCAO E RESPOSTA IMEDIATA', data.answer1], ['2. MATRIZ DE RISCO', `Probabilidade: ${data.probability} | Impacto: ${data.impact}\n${data.answer2}`], ['3. PREVENCAO E CREDENCIAIS', data.answer3], ['4. CONTINUIDADE E RECUPERACAO', data.answer4], ['5. LICOES APRENDIDAS', data.answer5]];
+            for (const [title, answer] of questions) { if (y > 260) { doc.addPage(); y = 18; } doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.text(title, margin, y); y += 6; doc.setFont('helvetica','normal'); doc.setFontSize(10); y = addWrapped(doc, answer, margin, y, width, 5); y += 8; }
+            doc.setFontSize(9); doc.setTextColor(100); doc.text('Enviar para: dsr@netminas.com | Assunto: Atividade 04', margin, 285);
+            const safeName = data.student1.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'dupla'; doc.save(`atividade-04-${safeName}.pdf`);
+        }
+        function printActivity() { const data = getData(); if (!validate(data)) return; window.print(); }
+    </script>
+</body>
+</html>

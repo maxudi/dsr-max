@@ -3,730 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula 01: Introdução ao Desenvolvimento de Soluções Remotas</title>
+    <title>Aula 01 — Introdução ao DSR | Anhanguera</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --red: #c0001a;
+            --red-dark: #8b0013;
+            --red-soft: #ffebee;
+            --text: #1a1a2e;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
         }
-        .container-aula {
-            max-width: 950px;
-            margin: 2rem auto;
-            background-color: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-            transition: background-color 0.3s;
-        }
-        .slide {
-            display: none;
-            animation: fadeIn 0.6s ease-in-out;
-            min-height: 520px;
-        }
-        .slide.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .slide h2 {
-            color: #b71c1c;
-            font-weight: 700;
-            border-bottom: 4px solid #d32f2f;
-            padding-bottom: 15px;
-            display: inline-block;
-        }
-        img.slide-image {
-            max-height: 300px;
-            width: auto;
-            max-width: 100%;
-            margin: 1.5rem auto;
-            display: block;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            object-fit: contain;
-        }
-        .navigation-bar {
-            border-top: 1px solid #ddd;
-            padding-top: 1.5rem;
-        }
-        .btn-custom {
-            background-color: #d32f2f;
-            border-color: #d32f2f;
-            color: white;
-            font-weight: 600;
-            padding: 12px 30px;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .btn-custom:hover {
-            background-color: #b71c1c;
-            border-color: #b71c1c;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .quiz-question {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 1.5rem;
-            border-left: 5px solid #d32f2f;
-        }
-        .result-box {
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 12px;
-            font-weight: 500;
-            animation: fadeIn 0.4s;
-        }
-        .correct-answer {
-            background-color: #e8f5e9;
-            border-left: 5px solid #4caf50;
-            color: #2e7d32;
-        }
-        .wrong-answer {
-            background-color: #ffcdd2;
-            border-left: 5px solid #f44336;
-            color: #c62828;
-        }
-        .form-check.correct .form-check-label {
-            color: #2e7d32;
-            font-weight: bold;
-        }
-        .highlight-box {
-            background-color: #ffebee;
-            border-left: 5px solid #c62828;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 1.5rem;
-        }
-       
-        /* Estilos para o PDF Vibrante */
-        .pdf-capture-mode {
-            background-color: #263238 !important;
-            color: white !important;
-        }
-        .pdf-capture-mode h2, .pdf-capture-mode .lead, .pdf-capture-mode p, .pdf-capture-mode li, .pdf-capture-mode strong, .pdf-capture-mode div, .pdf-capture-mode span, .pdf-capture-mode th, .pdf-capture-mode td {
-            color: white !important;
-        }
-        .pdf-capture-mode h2 {
-            border-bottom-color: #ef5350 !important;
-        }
-        .pdf-capture-mode .highlight-box, .pdf-capture-mode .card {
-            background-color: #37474f;
-            border-left-color: #ef5350;
-        }
-        .pdf-capture-mode .table-dark {
-             background-color: #d32f2f !important;
-             border-color: #d32f2f !important;
-        }
-         .pdf-capture-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
-            --bs-table-accent-bg: rgba(255, 255, 255, 0.05);
-        }
-        .pdf-capture-mode .text-muted {
-            color: #cfd8dc !important;
-        }
-        .pdf-capture-mode .quiz-question, .pdf-capture-mode .correct-answer, .pdf-capture-mode .wrong-answer {
-             color: #212529 !important;
-        }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        .topbar { background: #fff; border-bottom: 1px solid var(--border); padding: 0.65rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+        .topbar-brand { font-weight: 700; font-size: 0.92rem; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .progress-track { height: 4px; background: #e2e8f0; width: 100%; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--red) 0%, #e53935 100%); transition: width 0.3s; }
+        .slide-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem 1rem 3rem; }
+        .slide-card { background: #fff; border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 10px 32px rgba(0,0,0,0.06); max-width: 980px; width: 100%; min-height: 540px; display: flex; flex-direction: column; overflow: hidden; }
+        .slide-header { padding: 1.25rem 2rem 0.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; }
+        .slide-badge { background: var(--red-soft); color: var(--red); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.6px; padding: 0.35rem 0.85rem; border-radius: 50px; }
+        .slide-body { padding: 2rem; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .slide-footer { padding: 1rem 2rem; background: #fafafa; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .slide-item { display: none; animation: fadeIn 0.25s ease-in-out; }
+        .slide-item.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .card-custom { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; height: 100%; }
+        .dot-nav { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; display: inline-block; cursor: pointer; transition: all 0.2s; }
+        .dot-nav.active { background: var(--red); transform: scale(1.3); }
     </style>
 </head>
 <body>
-    <div class="container-aula">
-        <div class="text-center mb-5">
-            <h1 class="display-5" style="color: #b71c1c;">Desenvolvimento de Soluções Remotas</h1>
-            <p class="lead text-muted">AULA 01: Introdução – Processos, Ferramentas Ágeis e Gestão de Equipes Distribuídas</p>
+    <header class="topbar">
+        <a href="index.html" class="topbar-brand"><i class="bi bi-arrow-left-circle text-danger fs-5"></i><span>DSR &nbsp;&middot;&nbsp; Voltar ao Portal</span></a>
+        <span class="badge text-bg-light border fw-semibold" id="slideCount">Slide 1 de 5</span>
+    </header>
+    <div class="progress-track"><div class="progress-fill" id="progressBar" style="width: 20%;"></div></div>
+
+    <main class="slide-container">
+        <div class="slide-card">
+            <div class="slide-header">
+                <span class="slide-badge" id="slideCategory">Introdução</span>
+                <small class="text-muted"><kbd class="bg-light text-dark border">←</kbd> <kbd class="bg-light text-dark border">→</kbd> navegar</small>
+            </div>
+            <div class="slide-body">
+                <!-- Slide 1 -->
+                <div class="slide-item active" data-category="Visão Geral">
+                    <span class="text-danger fw-bold text-uppercase" style="letter-spacing:1px; font-size:0.8rem;">Anhanguera &bull; Graduação em Tecnologia</span>
+                    <h1 class="display-6 fw-bold mt-2 mb-3">Aula 01 — Fundamentos do Trabalho Remoto & DSR</h1>
+                    <p class="lead text-muted mb-4">O que define o Desenvolvimento de Soluções Remotas, a transformação do mercado tech e o modelo de trabalho global.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge text-bg-light border p-2"><i class="bi bi-globe me-1 text-primary"></i> Mercado Global</span>
+                        <span class="badge text-bg-light border p-2"><i class="bi bi-laptop me-1 text-danger"></i> Infraestrutura Pessoal</span>
+                        <span class="badge text-bg-light border p-2"><i class="bi bi-clock-history me-1 text-warning"></i> Fusos Horários</span>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="slide-item" data-category="Contexto de Mercado">
+                    <h3 class="fw-bold mb-3">A Mudança de Paradigma</h3>
+                    <p class="text-muted mb-4">O desenvolvimento remoto deixou de ser um benefício temporário e tornou-se a espinha dorsal da tecnologia mundial.</p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card-custom border-danger">
+                                <h6 class="fw-bold text-danger"><i class="bi bi-building me-1"></i> Modelo Tradicional (On-Site)</h6>
+                                <ul class="small text-secondary ps-3 mb-0" style="line-height: 1.8;">
+                                    <li>Contratação limitada ao raio geográfico da sede física.</li>
+                                    <li>Comunicação baseada em presença e reuniões presenciais.</li>
+                                    <li>Infraestrutura de rede controlada por perímetro físico.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-custom border-success">
+                                <h6 class="fw-bold text-success"><i class="bi bi-globe2 me-1"></i> Modelo Distribuído (Remote-First)</h6>
+                                <ul class="small text-secondary ps-3 mb-0" style="line-height: 1.8;">
+                                    <li>Acesso ao mercado global e contratação sem barreiras territoriais.</li>
+                                    <li>Foco em entregas orientadas a objetivos, e não a "horas na cadeira".</li>
+                                    <li>Operação nativa na nuvem e segurança baseada em Zero Trust.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="slide-item" data-category="Pilares do DSR">
+                    <h3 class="fw-bold mb-3">Os 3 Pilares do Profissional Remoto</h3>
+                    <p class="text-muted mb-4">Competências técnicas e comportamentais indispensáveis para engenharia de software remota:</p>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="card-custom">
+                                <i class="bi bi-cpu text-primary fs-3"></i>
+                                <h6 class="fw-bold mt-2">1. Autonomia Técnica</h6>
+                                <p class="small text-muted mb-0">Capacidade de depurar código, ler documentação oficial e resolver impedimentos sem depender de supervisão constante.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-custom">
+                                <i class="bi bi-chat-left-dots text-success fs-3"></i>
+                                <h6 class="fw-bold mt-2">2. Comunicação Clara</h6>
+                                <p class="small text-muted mb-0">Habilidade de transmitir requisitos, cenários de teste e dúvidas de forma explícita e documentada por escrito.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-custom">
+                                <i class="bi bi-shield-check text-danger fs-3"></i>
+                                <h6 class="fw-bold mt-2">3. Gestão Pessoal</h6>
+                                <p class="small text-muted mb-0">Organização rigorosa de prioridades, controle do próprio fluxo de concentração e isolamento de distrações.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 4 -->
+                <div class="slide-item" data-category="Equipamento & Postura">
+                    <h3 class="fw-bold mb-3">Ergonomia e Infraestrutura Doméstica</h3>
+                    <p class="text-muted mb-3">O ambiente físico afeta diretamente a performance e a sustentabilidade a longo prazo.</p>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card-custom">
+                                <h6 class="fw-bold text-dark"><i class="bi bi-wifi text-primary me-1"></i> Conexão e Redundância</h6>
+                                <ul class="small text-muted ps-3 mb-0" style="line-height: 1.8;">
+                                    <li>Uso preferencial de cabo de rede (Ethernet) sobre Wi-Fi.</li>
+                                    <li>Plano secundário de emergência (roteamento via 4G/5G do celular).</li>
+                                    <li>No-break / UPS em estações com instabilidade de energia.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-custom">
+                                <h6 class="fw-bold text-dark"><i class="bi bi-heart-pulse text-danger me-1"></i> Ergonomia Operacional</h6>
+                                <ul class="small text-muted ps-3 mb-0" style="line-height: 1.8;">
+                                    <li>Monitor na altura dos olhos para evitar fadiga cervical.</li>
+                                    <li>Cadeira com apoio lombar ajustável e pés totalmente apoiados.</li>
+                                    <li>Pausas ativas a cada 90 minutos para circulação.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 5 -->
+                <div class="slide-item" data-category="Conclusão">
+                    <h3 class="fw-bold mb-3">Fechamento & Próxima Aula</h3>
+                    <p class="text-muted mb-4">Com o contexto estabelecido, a Aula 02 abordará como mensurar prazos e prever gargalos utilizando o método CPM/PERT.</p>
+                    <div class="p-3 bg-light border rounded mb-4">
+                        <h6 class="fw-bold mb-1"><i class="bi bi-arrow-right-circle text-danger me-1"></i> Próxima Aula: Planejamento e Caminho Crítico</h6>
+                        <p class="small text-muted mb-0">Você aprenderá a calcular o caminho crítico de projetos de software e utilizar o simulador CPM integrado.</p>
+                    </div>
+                    <a href="dsr2.html" class="btn btn-danger btn-sm px-4 fw-semibold">Ir para a Aula 02 <i class="bi bi-chevron-right ms-1"></i></a>
+                </div>
+            </div>
+            <div class="slide-footer">
+                <button class="btn btn-outline-secondary btn-sm px-3" id="prevBtn" onclick="changeSlide(-1)" disabled><i class="bi bi-chevron-left me-1"></i> Anterior</button>
+                <div class="d-none d-md-flex align-items-center gap-2" id="dotsContainer"></div>
+                <button class="btn btn-danger btn-sm px-3" id="nextBtn" onclick="changeSlide(1)">Próximo <i class="bi bi-chevron-right ms-1"></i></button>
+            </div>
         </div>
-        <div id="slides-container"></div>
-        <div class="d-flex justify-content-between align-items-center mt-4 navigation-bar">
-            <button class="btn btn-outline-secondary rounded-pill px-4" id="prev-slide">&larr; Anterior</button>
-            <span id="slide-counter" class="text-muted fw-bold" aria-live="polite"></span>
-            <button class="btn btn-custom" id="next-slide">Avançar &rarr;</button>
-        </div>
-    </div>
-   
+    </main>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const imageBaseUrl = "https://eduadmin.netminas.com/disciplinas/1/a1bd6c652d4b30464db1dd71630e2a4d/imagens/";
-            const usedImageNumbers = new Set();
-            function getRandomImageUrl() {
-                let randomNum;
-                if (usedImageNumbers.size >= 30) { usedImageNumbers.clear(); }
-                do { randomNum = Math.floor(Math.random() * 30) + 1; } while (usedImageNumbers.has(randomNum));
-                usedImageNumbers.add(randomNum);
-                return `${imageBaseUrl}${randomNum}.jpg`;
-            }
-           
-            const slidesContent = [
-                // 1
-                { 
-                    title: '<i class="bi bi-rocket-takeoff-fill"></i> Bem-vindos à Disciplina', 
-                    content: `<p class="mt-4 fs-5">O modelo de trabalho distribuído consolidou-se mundialmente. Criar <strong>“soluções remotas”</strong> vai muito além de codificar sistemas.</p>
-                    <div class="highlight-box">
-                        <p class="mb-0 fs-5">Exige <strong>arquitetura de comunicação</strong> e <strong>governança de processos humanos</strong>.</p>
-                    </div>
-                    <p class="mt-4">Nesta disciplina você vai aprender a transformar código em engenharia humana — gerindo equipes distribuídas com processos ágeis, clareza e visibilidade.</p>
-                    <div class="card mt-4"><div class="card-body">
-                        <h5 class="card-title">Professor</h5><p class="card-text">Me. Maximiano Eduardo Pereira</p>
-                        <h5 class="card-title">Instituição</h5><p class="card-text">Faculdade Anhanguera Uberlândia</p>
-                    </div></div>` 
-                },
-                // 2
-                { 
-                    title: '<i class="bi bi-flag-fill"></i> Objetivos da Aula', 
-                    content: `<p>Ao final desta aula você será capaz de:</p>
-                    <ul>
-                        <li>Compreender o contexto da transformação digital e da virada do trabalho remoto.</li>
-                        <li>Explicar por que a <strong>camada humana</strong> é o principal fator de sucesso (ou falha) em projetos remotos.</li>
-                        <li>Identificar e gerenciar <strong>stakeholders</strong> em ambientes distribuídos.</li>
-                        <li>Aplicar o conceito do <strong>Triângulo de Ferro</strong> (Escopo × Tempo × Custo).</li>
-                        <li>Ter uma visão clara dos módulos de <strong>Planejamento</strong> e <strong>Metodologias Ágeis</strong>.</li>
-                    </ul>` 
-                },
-                // 3
-                { 
-                    title: '<i class="bi bi-globe2"></i> Contexto e Transformação Digital', 
-                    content: `<p>A pandemia acelerou uma mudança que já estava em curso: o trabalho remoto e híbrido deixou de ser exceção e virou regra em grande parte do mercado de tecnologia.</p>
-                    <p>Empresas descobriram que é possível (e muitas vezes mais eficiente) ter equipes distribuídas geograficamente.</p>
-                    <p>Porém, essa liberdade trouxe novos desafios de gestão, comunicação e alinhamento que não existiam com a mesma intensidade no modelo presencial.</p>`,
-                    image: getRandomImageUrl()
-                },
-                // 4
-                { 
-                    title: '<i class="bi bi-arrow-repeat"></i> A Virada do Trabalho Remoto', 
-                    content: `<p>Criar soluções remotas exige muito mais do que conhecimento técnico de programação. Exige:</p>
-                    <ul>
-                        <li>Arquitetura clara de comunicação</li>
-                        <li>Governança de processos humanos</li>
-                        <li>Ferramentas de colaboração e visibilidade</li>
-                        <li>Cultura de confiança e autonomia</li>
-                        <li>Rituais de sincronização bem definidos</li>
-                    </ul>
-                    <p class="mt-3">Sem esses elementos, mesmo o melhor código pode falhar por falta de alinhamento e visibilidade.</p>` 
-                },
-                // 5
-                { 
-                    title: '<i class="bi bi-people-fill"></i> Do Código à Engenharia Humana', 
-                    content: `<p>A maior causa de falha em projetos remotos <strong>não é erro de sintaxe técnica</strong>.</p>
-                    <p>É o <strong>ruído de comunicação</strong>, a <strong>falta de visibilidade</strong> e o <strong>isolamento</strong> dos membros da equipe.</p>
-                    <div class="highlight-box">
-                        <p class="mb-0">Por isso esta disciplina trata a camada humana com a mesma importância da camada técnica. Software é feito por pessoas — e pessoas distantes fisicamente precisam de processos ainda mais claros.</p>
-                    </div>` 
-                },
-                // 6
-                { 
-                    title: '<i class="bi bi-chat-dots-fill"></i> Comunicação Produtiva', 
-                    content: `<p>Ambientes assíncronos (onde as pessoas não estão online ao mesmo tempo) exigem <strong>clareza absoluta</strong>.</p>
-                    <ul>
-                        <li>Expectativas devem ser documentadas</li>
-                        <li>Entregáveis precisam ter critérios de aceite claros</li>
-                        <li>Decisões importantes devem ser registradas</li>
-                        <li>O “como” e o “porquê” precisam ser comunicados, não só o “o quê”</li>
-                    </ul>
-                    <p class="mt-3">A comunicação vaga é o maior inimigo de equipes remotas.</p>` 
-                },
-                // 7
-                { 
-                    title: '<i class="bi bi-person-hearts"></i> Engajamento de Equipes', 
-                    content: `<p>É fundamental garantir que desenvolvedores, designers, QAs e gestores compreendam <strong>seu papel no resultado final</strong> do projeto.</p>
-                    <ul>
-                        <li>Cada membro precisa enxergar o impacto do seu trabalho</li>
-                        <li>O isolamento pode gerar desmotivação silenciosa</li>
-                        <li>Reconhecimentos e feedbacks constantes são ainda mais importantes no remoto</li>
-                    </ul>
-                    <p class="mt-3">Equipes engajadas entregam mais e com mais qualidade — independentemente da distância física.</p>` 
-                },
-                // 8
-                { 
-                    title: '<i class="bi bi-bullseye"></i> Alinhamento com o Negócio', 
-                    content: `<p>O software construído precisa atender perfeitamente aos <strong>objetivos operacionais do cliente</strong>.</p>
-                    <p>Em projetos remotos é fácil perder o “porquê” ao longo das sprints. Por isso:</p>
-                    <ul>
-                        <li>O Product Owner deve manter o time constantemente conectado ao valor de negócio</li>
-                        <li>Demonstrações frequentes (Sprint Reviews) são essenciais</li>
-                        <li>Métricas de valor devem ser acompanhadas, não apenas métricas de velocidade</li>
-                    </ul>` 
-                },
-                // 9
-                { 
-                    title: '<i class="bi bi-shield-check"></i> Mitigação de Riscos', 
-                    content: `<p>Uma gestão inadequada da camada humana gera:</p>
-                    <ul>
-                        <li>Entregas desalinhadas com a expectativa do cliente</li>
-                        <li>Retrabalho constante</li>
-                        <li>Desperdício de investimento financeiro</li>
-                        <li>Desgaste da equipe e turnover</li>
-                    </ul>
-                    <div class="highlight-box">
-                        <p class="mb-0">Gerir bem a comunicação, o engajamento e o alinhamento é a forma mais eficiente de reduzir riscos em projetos remotos.</p>
-                    </div>` 
-                },
-                // 10
-                { 
-                    title: '<i class="bi bi-diagram-3-fill"></i> Quem São os Stakeholders?', 
-                    content: `<p>Stakeholders são todas as partes interessadas no projeto:</p>
-                    <ul>
-                        <li><strong>Patrocinadores (Sponsors)</strong> – quem financia e espera retorno</li>
-                        <li><strong>Clientes / Usuários finais</strong> – quem vai usar o sistema</li>
-                        <li><strong>Fornecedores e parceiros</strong></li>
-                        <li><strong>Reguladores e órgãos públicos</strong> (quando aplicável)</li>
-                        <li><strong>Equipe de desenvolvimento</strong> – também é stakeholder!</li>
-                    </ul>
-                    <p class="mt-3">Cada grupo tem expectativas diferentes e precisa de estratégias de comunicação específicas.</p>`,
-                    image: getRandomImageUrl()
-                },
-                // 11
-                { 
-                    title: '<i class="bi bi-arrows-angle-expand"></i> Expectativas Divergentes', 
-                    content: `<p>É comum que os interesses dos stakeholders não sejam iguais:</p>
-                    <ul>
-                        <li><strong>Patrocinador</strong> → retorno financeiro, cumprimento de prazos e controle de custos</li>
-                        <li><strong>Usuário final</strong> → usabilidade, velocidade e ausência de bugs</li>
-                        <li><strong>Equipe técnica</strong> → clareza de requisitos, autonomia e boas ferramentas</li>
-                        <li><strong>Operações (Ops)</strong> → estabilidade, segurança e facilidade de implantação</li>
-                    </ul>
-                    <p class="mt-3">O gestor remoto precisa equilibrar essas expectativas constantemente.</p>` 
-                },
-                // 12
-                { 
-                    title: '<i class="bi bi-eye-fill"></i> Transparência Contínua', 
-                    content: `<p>A gestão eficaz de stakeholders evita <strong>surpresas negativas</strong> no final de longos ciclos de produção.</p>
-                    <p>No remoto, a transparência precisa ser ainda maior porque as pessoas não “sentem” o andamento do projeto no dia a dia do escritório.</p>
-                    <ul>
-                        <li>Relatórios executivos periódicos</li>
-                        <li>Demonstrações de valor a cada Sprint</li>
-                        <li>Quadros visuais (Kanban / boards) acessíveis a todos</li>
-                        <li>Comunicação proativa de riscos e impedimentos</li>
-                    </ul>` 
-                },
-                // 13
-                { 
-                    title: '<i class="bi bi-table"></i> Matriz de Impacto de Stakeholders', 
-                    content: `
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Grupo</th>
-                                    <th>Principais Expectativas</th>
-                                    <th>Estratégia Remota</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Patrocinador</strong></td>
-                                    <td>Prazos, ROI e custos controlados</td>
-                                    <td>Relatórios executivos + revisões de valor por Sprint</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Cliente / Usuário</strong></td>
-                                    <td>Usabilidade e funcionalidade</td>
-                                    <td>Demonstração de MVPs + testes de usabilidade</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Equipe de Dev</strong></td>
-                                    <td>Clareza e pouca interrupção</td>
-                                    <td>Daily Scrums + Kanban + automação</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Operações</strong></td>
-                                    <td>Estabilidade e segurança</td>
-                                    <td>Cultura DevOps + pipelines CI/CD</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>` 
-                },
-                // 14
-                { 
-                    title: '<i class="bi bi-triangle-fill"></i> A Tríade: Escopo, Tempo e Custo', 
-                    content: `<p>O famoso <strong>Triângulo de Ferro</strong> continua válido — e se torna ainda mais sensível em projetos remotos.</p>
-                    <p>As três variáveis estão interligadas:</p>
-                    <ul>
-                        <li><strong>Escopo</strong> → o que será entregue</li>
-                        <li><strong>Tempo</strong> → quando será entregue</li>
-                        <li><strong>Custo</strong> → quanto será investido</li>
-                    </ul>
-                    <div class="highlight-box">
-                        <p class="mb-0">Alterar uma variável sem ajustar as outras compromete a qualidade da entrega.</p>
-                    </div>` 
-                },
-                // 15
-                { 
-                    title: '<i class="bi bi-exclamation-triangle-fill"></i> O Equilíbrio do Triângulo de Ferro', 
-                    content: `<p>Se o cliente pede mais funcionalidades (aumenta o escopo) sem aumentar o prazo ou o orçamento, a qualidade sofre.</p>
-                    <p>Se o prazo é reduzido sem reduzir o escopo ou aumentar a equipe, a qualidade também é impactada.</p>
-                    <p>Em ambientes remotos a percepção de “quanto falta” e “quanto custa” fica menos intuitiva. Por isso a comunicação clara sobre essas três dimensões é fundamental.</p>` 
-                },
-                // 16
-                { 
-                    title: '<i class="bi bi-speedometer2"></i> Otimização de Recursos', 
-                    content: `<p>Para reduzir o tempo de entrega, existem basicamente duas estratégias:</p>
-                    <ol>
-                        <li><strong>Aumentar a equipe</strong> (o que aumenta o custo)</li>
-                        <li><strong>Redefinir a sequência e a eficiência</strong> das atividades (melhorar o processo)</li>
-                    </ol>
-                    <p class="mt-3">A segunda opção é quase sempre preferível. Adicionar pessoas a um projeto atrasado pode, inclusive, atrasá-lo ainda mais (Lei de Brooks).</p>` 
-                },
-                // 17
-                { 
-                    title: '<i class="bi bi-collection-fill"></i> Visão dos Módulos do Curso', 
-                    content: `<p>O curso está organizado em módulos complementares. Nesta introdução já antecipamos os dois primeiros:</p>
-                    <ol>
-                        <li><strong>Módulo 1 – Planejamento e Tempo</strong><br>
-                        Sequenciamento, PERT/CPM, Caminho Crítico e Gráfico de Gantt.</li>
-                        <li><strong>Módulo 2 – Metodologias Ágeis</strong><br>
-                        Manifesto Ágil, Framework Scrum, papéis e rituais para equipes remotas.</li>
-                    </ol>
-                    <p class="mt-3">Nas próximas aulas aprofundaremos cada tema com práticas e ferramentas reais.</p>` 
-                },
-                // 18
-                { 
-                    title: '<i class="bi bi-list-task"></i> Sequenciamento de Atividades', 
-                    content: `<p>Antes de estimar prazos, é preciso organizar o trabalho:</p>
-                    <ul>
-                        <li><strong>Decomposição:</strong> dividir o projeto em pacotes de trabalho menores e gerenciáveis</li>
-                        <li><strong>Precedência (PDM):</strong> mapear as interdependências entre as tarefas (o que precisa acontecer antes do quê)</li>
-                        <li><strong>Estimativas:</strong> calcular a duração de cada pacote com base no histórico da equipe e nos recursos disponíveis</li>
-                    </ul>
-                    <p class="mt-3">Essa organização é a base de qualquer planejamento confiável.</p>` 
-                },
-                // 19
-                { 
-                    title: '<i class="bi bi-diagram-2"></i> Método de Diagramação de Precedências (PDM)', 
-                    content: `<p>O PDM permite visualizar as relações entre as atividades:</p>
-                    <ul>
-                        <li>Término-Início (a mais comum)</li>
-                        <li>Início-Início</li>
-                        <li>Término-Término</li>
-                        <li>Início-Término (menos frequente)</li>
-                    </ul>
-                    <p>Essa visualização ajuda a equipe remota a entender dependências e a planejar o trabalho paralelo de forma inteligente.</p>` 
-                },
-                // 20
-                { 
-                    title: '<i class="bi bi-graph-up-arrow"></i> PERT/CPM e o Caminho Crítico', 
-                    content: `<p>O <strong>Caminho Crítico (CPM)</strong> identifica a sequência de tarefas de <strong>maior duração</strong>.</p>
-                    <p>Qualquer atraso em uma atividade do caminho crítico compromete diretamente a data final do projeto.</p>
-                    <p>Atividades fora do caminho crítico possuem “folga” (slack) e podem sofrer pequenos atrasos sem impactar o prazo global.</p>
-                    <div class="highlight-box">
-                        <p class="mb-0">Em equipes remotas, monitorar o caminho crítico é essencial para priorizar o que realmente importa.</p>
-                    </div>` 
-                },
-                // 21
-                { 
-                    title: '<i class="bi bi-bar-chart-steps"></i> Gráfico de Gantt', 
-                    content: `<p>O Gráfico de Gantt é uma das ferramentas mais usadas no planejamento:</p>
-                    <ul>
-                        <li><strong>Visualização em barras:</strong> mostra as atividades ao longo do calendário</li>
-                        <li><strong>Identificação de folgas:</strong> permite ver quais tarefas têm margem e quais são críticas</li>
-                        <li><strong>Paralelismo:</strong> facilita o agendamento de tarefas que podem ser executadas simultaneamente por membros remotos</li>
-                    </ul>
-                    <p class="mt-3">Ferramentas modernas (Jira, Azure DevOps, Monday, ClickUp etc.) geram Gantts automaticamente a partir do backlog.</p>` 
-                },
-                // 22
-                { 
-                    title: '<i class="bi bi-quote"></i> Uma Frase para Refletir', 
-                    content: `<div class="highlight-box text-center">
-                        <p class="fs-4 mb-3">“Planos são inúteis, mas o planejamento é indispensável.”</p>
-                        <p class="mb-0">— Dwight D. Eisenhower</p>
-                    </div>
-                    <p class="mt-4">O plano muda. O ato de planejar (pensar dependências, riscos, sequência e prioridades) é o que realmente prepara a equipe para o imprevisível — especialmente no ambiente remoto.</p>` 
-                },
-                // 23
-                { 
-                    title: '<i class="bi bi-water"></i> Modelo Cascata (Waterfall)', 
-                    content: `<p>O modelo tradicional em cascata é:</p>
-                    <ul>
-                        <li>Sequencial e engessado</li>
-                        <li>Exige documentação extensiva no início</li>
-                        <li>Alterações tardias geram alto retrabalho e frustração</li>
-                        <li>O cliente só vê o resultado no final</li>
-                    </ul>
-                    <p class="mt-3">Em projetos remotos, o modelo cascata aumenta ainda mais o risco de desalinhamento, pois o feedback chega tarde demais.</p>` 
-                },
-                // 24
-                { 
-                    title: '<i class="bi bi-lightning-charge-fill"></i> Valores do Manifesto Ágil', 
-                    content: `<p>O Manifesto Ágil prioriza:</p>
-                    <ul>
-                        <li><strong>Indivíduos e interações</strong> mais que processos e ferramentas</li>
-                        <li><strong>Software em funcionamento</strong> mais que documentação abrangente</li>
-                        <li><strong>Colaboração com o cliente</strong> mais que negociação de contratos</li>
-                        <li><strong>Responder a mudanças</strong> mais que seguir um plano</li>
-                    </ul>
-                    <p class="mt-3">Esses valores são especialmente poderosos em equipes distribuídas, onde a adaptação rápida e a comunicação frequente fazem toda a diferença.</p>` 
-                },
-                // 25
-                { 
-                    title: '<i class="bi bi-arrow-repeat"></i> Ciclo Completo do Scrum', 
-                    content: `<ol>
-                        <li><strong>Sprint Planning</strong> → Seleção dos itens do Product Backlog para a meta da Sprint</li>
-                        <li><strong>Sprint Execution (1 a 4 semanas)</strong> → Desenvolvimento focado + Daily Scrum de 15 minutos</li>
-                        <li><strong>Sprint Review</strong> → Inspeção do incremento funcional (MVP) junto ao cliente</li>
-                        <li><strong>Retrospectiva</strong> → Avaliação do processo e definição de melhorias para a próxima Sprint</li>
-                    </ol>
-                    <p class="mt-3">Os rituais do Scrum criam pontos de sincronização naturais — ideais para equipes remotas.</p>` 
-                },
-                // 26
-                { 
-                    title: '<i class="bi bi-person-badge-fill"></i> Papéis no Scrum Distribuído', 
-                    content: `<ul>
-                        <li><strong>Product Owner (PO)</strong><br>
-                        Representa o cliente, define o valor de negócio e prioriza continuamente o Product Backlog.</li>
-                        <li class="mt-2"><strong>Scrum Master (SM)</strong><br>
-                        Facilitador ágil. Garante o cumprimento dos rituais e remove impedimentos que travam a equipe.</li>
-                        <li class="mt-2"><strong>Equipe de Desenvolvimento</strong><br>
-                        Multidisciplinar e auto-organizada. Transforma os requisitos em incrementos de software prontos para entrega.</li>
-                    </ul>` 
-                },
-                // 27
-                { 
-                    title: '<i class="bi bi-check2-circle"></i> Resumo da Aula', 
-                    content: `<p>Nesta aula introdutória você aprendeu que:</p>
-                    <ul>
-                        <li>Soluções remotas exigem <strong>engenharia humana</strong> tanto quanto técnica.</li>
-                        <li>Comunicação clara, engajamento e alinhamento com o negócio são críticos.</li>
-                        <li>Stakeholders têm expectativas diferentes e precisam de estratégias específicas.</li>
-                        <li>O Triângulo de Ferro continua válido e ainda mais sensível no remoto.</li>
-                        <li>Metodologias ágeis (especialmente Scrum) são as mais adequadas para equipes distribuídas.</li>
-                        <li>Planejamento (sequenciamento, caminho crítico e Gantt) continua indispensável.</li>
-                    </ul>
-                    <p class="lead text-center mt-4">Agora vamos testar o que você absorveu!</p>` 
-                },
-                // 28 - Quiz
-                {
-                    title: '<i class="bi bi-patch-question-fill"></i> Teste seus Conhecimentos!',
-                    content: `
-                        <form id="quiz-form">
-                            <div class="quiz-question">
-                                <p><strong>1. Qual é a maior causa de falha em projetos remotos?</strong></p>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="a"><label>a) Erros de sintaxe e bugs técnicos</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="b"><label>b) Ruído de comunicação, falta de visibilidade e isolamento</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q1" value="c"><label>c) Falta de ferramentas caras</label></div>
-                                <div id="result-q1" class="mt-2"></div>
-                            </div>
-                            <div class="quiz-question">
-                                <p><strong>2. No Triângulo de Ferro, o que acontece se aumentarmos o escopo sem ajustar prazo ou orçamento?</strong></p>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="a"><label>a) A qualidade permanece igual</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="b"><label>b) A qualidade da entrega é comprometida</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q2" value="c"><label>c) O custo diminui automaticamente</label></div>
-                                <div id="result-q2" class="mt-2"></div>
-                            </div>
-                            <div class="quiz-question">
-                                <p><strong>3. Qual papel no Scrum representa o cliente e prioriza o Product Backlog?</strong></p>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="a"><label>a) Scrum Master</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="b"><label>b) Product Owner</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q3" value="c"><label>c) Equipe de Desenvolvimento</label></div>
-                                <div id="result-q3" class="mt-2"></div>
-                            </div>
-                            <div class="quiz-question">
-                                <p><strong>4. O Caminho Crítico (CPM) identifica:</strong></p>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="a"><label>a) As tarefas mais fáceis do projeto</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="b"><label>b) A sequência de tarefas de maior duração, cujo atraso compromete a data final</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q4" value="c"><label>c) Apenas as tarefas de design</label></div>
-                                <div id="result-q4" class="mt-2"></div>
-                            </div>
-                            <div class="quiz-question">
-                                <p><strong>5. Segundo Eisenhower:</strong></p>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="a"><label>a) Planos são essenciais e nunca devem mudar</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="b"><label>b) Planos são inúteis, mas o planejamento é indispensável</label></div>
-                                <div class="form-check"><input class="form-check-input" type="radio" name="q5" value="c"><label>c) Planejamento não é necessário em projetos ágeis</label></div>
-                                <div id="result-q5" class="mt-2"></div>
-                            </div>
-                            <button type="button" class="btn btn-success me-2" id="submit-quiz"><i class="bi bi-check-lg"></i> Verificar Respostas</button>
-                        </form>
-                    `
-                },
-                // 29 - Fim
-                {
-                    title: '<i class="bi bi-award-fill"></i> Fim da Aula 01',
-                    content: `<p class="fs-5">Parabéns! Você concluiu a introdução ao Desenvolvimento de Soluções Remotas.</p>
-                    <p>Agora você já entende que o sucesso de um projeto remoto depende tanto da técnica quanto da engenharia humana: comunicação, alinhamento de stakeholders, equilíbrio do triângulo de ferro e processos ágeis bem executados.</p>
-                    <p>Na próxima aula aprofundaremos o <strong>Módulo 1 – Planejamento e Tempo</strong> (sequenciamento, PERT/CPM e Gantt) com mais detalhes e exemplos práticos.</p>
-                    <div class="d-flex flex-wrap justify-content-center mt-4">
-                        <button type="button" class="btn btn-outline-primary m-2" id="restart-quiz"><i class="bi bi-arrow-clockwise"></i> Tentar Quiz Novamente</button>
-                        <button type="button" class="btn btn-danger m-2" id="download-pdf"><i class="bi bi-file-earmark-pdf-fill"></i> Baixar Aula em PDF</button>
-                    </div>`
-                }
-            ];
-
-            const slidesContainer = document.getElementById('slides-container');
-            slidesContent.forEach((slideData, index) => {
-                const slideDiv = document.createElement('div');
-                slideDiv.className = 'slide';
-                if (index === 0) slideDiv.classList.add('active');
-               
-                let slideHTML = `<h2>${slideData.title}</h2><hr class="mb-4">${slideData.content}`;
-                if (slideData.image) {
-                    slideHTML += `<img src="${slideData.image}" class="slide-image" alt="Imagem ilustrativa" loading="lazy" crossorigin="anonymous">`;
-                }
-                slideDiv.innerHTML = slideHTML;
-                slidesContainer.appendChild(slideDiv);
-            });
-           
-            const slides = document.querySelectorAll('.slide');
-            const nextButton = document.getElementById('next-slide');
-            const prevButton = document.getElementById('prev-slide');
-            const slideCounter = document.getElementById('slide-counter');
-            let currentSlide = 0;
-
-            const correctAnswers = { q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'b' };
-            const correctAnswersText = {
-                q1: '<strong>b) Ruído de comunicação, falta de visibilidade e isolamento.</strong>',
-                q2: '<strong>b) A qualidade da entrega é comprometida.</strong>',
-                q3: '<strong>b) Product Owner.</strong>',
-                q4: '<strong>b) A sequência de tarefas de maior duração, cujo atraso compromete a data final.</strong>',
-                q5: '<strong>b) Planos são inúteis, mas o planejamento é indispensável.</strong>'
-            };
-
-            function updateSlideView() {
-                slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
-                prevButton.disabled = currentSlide === 0;
-               
-                const quizSlideIndex = Array.from(slides).findIndex(s => s.querySelector('#quiz-form'));
-               
-                if (currentSlide === quizSlideIndex - 1) {
-                    nextButton.innerHTML = 'Iniciar Quiz &rarr;';
-                    nextButton.style.display = 'block';
-                } else if (currentSlide >= quizSlideIndex) {
-                    nextButton.style.display = 'none';
-                } else {
-                    nextButton.innerHTML = 'Avançar &rarr;';
-                    nextButton.style.display = 'block';
-                }
-                slideCounter.textContent = `Página ${currentSlide + 1} de ${slides.length}`;
-            }
-           
-            nextButton.addEventListener('click', () => { if (currentSlide < slides.length - 1) { currentSlide++; updateSlideView(); } });
-            prevButton.addEventListener('click', () => { if (currentSlide > 0) { currentSlide--; updateSlideView(); } });
-
-            function checkQuiz() {
-                const quizForm = document.getElementById('quiz-form');
-                if (!quizForm) return;
-                let allAnswered = true;
-                for (let i = 1; i <= 5; i++) {
-                    const qName = `q${i}`;
-                    const resultDiv = document.getElementById(`result-${qName}`);
-                    resultDiv.innerHTML = '';
-                    if (!quizForm.querySelector(`input[name="${qName}"]:checked`)) {
-                        allAnswered = false;
-                        resultDiv.innerHTML = `<div class="result-box wrong-answer"><i class="bi bi-exclamation-triangle-fill"></i> <strong>Por favor, selecione uma resposta.</strong></div>`;
-                    }
-                }
-                if (!allAnswered) return;
-
-                quizForm.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = true);
-               
-                for (let i = 1; i <= 5; i++) {
-                    const qName = `q${i}`;
-                    const userAnswer = quizForm.querySelector(`input[name="${qName}"]:checked`);
-                    const resultDiv = document.getElementById(`result-${qName}`);
-                    let message = '', resultClass = '';
-                    if (userAnswer) {
-                        if (userAnswer.value === correctAnswers[qName]) {
-                            message = '<i class="bi bi-check-circle-fill"></i> <strong>Correto!</strong>';
-                            resultClass = 'correct-answer';
-                            userAnswer.parentElement.classList.add('correct');
-                        } else {
-                            message = `<i class="bi bi-x-circle-fill"></i> <strong>Incorreto.</strong> A resposta correta é a ${correctAnswersText[qName]}`;
-                            resultClass = 'wrong-answer';
-                        }
-                    }
-                    resultDiv.innerHTML = `<div class="result-box ${resultClass}">${message}</div>`;
-                }
-                document.getElementById('submit-quiz').disabled = true;
-                setTimeout(() => {
-                    const finalSlideIndex = Array.from(slides).findIndex(s => s.querySelector('#download-pdf'));
-                    currentSlide = finalSlideIndex;
-                    updateSlideView();
-                }, 4500);
-            }
-
-            function restartQuiz() {
-                const quizSlideIndex = Array.from(slides).findIndex(s => s.querySelector('#quiz-form'));
-                currentSlide = quizSlideIndex;
-                updateSlideView();
-               
-                setTimeout(() => {
-                    const quizForm = document.getElementById('quiz-form');
-                    if (!quizForm) return;
-                    quizForm.reset();
-                    quizForm.querySelectorAll('input[type="radio"]').forEach(radio => {
-                        radio.disabled = false;
-                        radio.parentElement.classList.remove('correct');
-                    });
-                    for (let i = 1; i <= 5; i++) { document.getElementById(`result-q${i}`).innerHTML = ''; }
-                    document.getElementById('submit-quiz').disabled = false;
-                }, 100);
-            }
-           
-            async function generatePDF() {
-                const pdfButton = document.getElementById('download-pdf');
-                pdfButton.disabled = true;
-                pdfButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Gerando PDF...';
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
-                const originalActiveSlide = currentSlide;
-                const mainContainer = document.querySelector('.container-aula');
-               
-                for (let i = 0; i < slides.length - 1; i++) {
-                    const slideContent = slides[i];
-                   
-                    mainContainer.classList.add('pdf-capture-mode');
-                    slides.forEach(s => s.classList.remove('active'));
-                    slideContent.classList.add('active');
-                    await new Promise(resolve => setTimeout(resolve, 80));
-                    const canvas = await html2canvas(slideContent, { scale: 2.5, useCORS: true, logging: false }).catch(e => console.error(e));
-                   
-                    mainContainer.classList.remove('pdf-capture-mode');
-                    if (canvas) {
-                        const imgData = canvas.toDataURL('image/jpeg', 0.92);
-                        const pdfWidth = pdf.internal.pageSize.getWidth();
-                        const pdfHeight = pdf.internal.pageSize.getHeight();
-                        const imgRatio = canvas.width / canvas.height;
-                       
-                        let finalWidth = pdfWidth - 20;
-                        let finalHeight = finalWidth / imgRatio;
-                        if (finalHeight > pdfHeight - 20) {
-                            finalHeight = pdfHeight - 20;
-                            finalWidth = finalHeight * imgRatio;
-                        }
-                        const xOffset = (pdfWidth - finalWidth) / 2;
-                       
-                        if (i > 0) pdf.addPage();
-                       
-                        pdf.setFontSize(10);
-                        pdf.setTextColor(150);
-                        pdf.text(`Aula 01: Desenvolvimento de Soluções Remotas - Slide ${i + 1}`, 10, 8);
-                        pdf.addImage(imgData, 'JPEG', xOffset, 12, finalWidth, finalHeight);
-                    }
-                }
-               
-                pdf.save('aula-01-desenvolvimento-solucoes-remotas.pdf');
-               
-                slides.forEach(s => s.classList.remove('active'));
-                slides[originalActiveSlide].classList.add('active');
-                currentSlide = originalActiveSlide;
-                updateSlideView();
-               
-                pdfButton.disabled = false;
-                pdfButton.innerHTML = '<i class="bi bi-file-earmark-pdf-fill"></i> Baixar Aula em PDF';
-            }
-
-            document.body.addEventListener('click', function(event) {
-                if (event.target && event.target.id === 'submit-quiz') checkQuiz();
-                if (event.target && event.target.id === 'restart-quiz') restartQuiz();
-                if (event.target && event.target.id === 'download-pdf') generatePDF();
-            });
-            updateSlideView();
+        const slides = document.querySelectorAll('.slide-item');
+        const dotsContainer = document.getElementById('dotsContainer');
+        const slideCountEl = document.getElementById('slideCount');
+        const slideCatEl = document.getElementById('slideCategory');
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+        slides.forEach((_, idx) => {
+            const dot = document.createElement('span');
+            dot.className = `dot-nav ${idx === 0 ? 'active' : ''}`;
+            dot.onclick = () => { currentIndex = idx; updateUI(); };
+            dotsContainer.appendChild(dot);
+        });
+        function updateUI() {
+            slides.forEach((s, idx) => s.classList.toggle('active', idx === currentIndex));
+            Array.from(dotsContainer.children).forEach((dot, idx) => dot.className = `dot-nav ${idx === currentIndex ? 'active' : ''}`);
+            slideCountEl.textContent = `Slide ${currentIndex + 1} de ${slides.length}`;
+            slideCatEl.innerHTML = `Aula 01 &bull; ${slides[currentIndex].getAttribute('data-category')}`;
+            progressBar.style.width = `${((currentIndex + 1) / slides.length) * 100}%`;
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.innerHTML = currentIndex === slides.length - 1 ? 'Concluir <i class="bi bi-check2 ms-1"></i>' : 'Próximo <i class="bi bi-chevron-right ms-1"></i>';
+        }
+        function changeSlide(dir) {
+            const nxt = currentIndex + dir;
+            if (nxt >= 0 && nxt < slides.length) { currentIndex = nxt; updateUI(); }
+            else if (nxt === slides.length) window.location.href = 'index.html';
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+            else if (e.key === 'ArrowLeft') changeSlide(-1);
         });
     </script>
 </body>
