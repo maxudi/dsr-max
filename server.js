@@ -5,6 +5,7 @@ const multer = require('multer');
 
 const app = express();
 const port = process.env.PORT || 80;
+const adminPassword = process.env.ADMIN_PASSWORD || '';
 const uploadsDirectory = path.join(__dirname, 'uploads');
 const metadataPath = path.join(uploadsDirectory, 'entregas.json');
 
@@ -25,6 +26,12 @@ function readEntries() {
 
 function writeEntries(entries) {
     fs.writeFileSync(metadataPath, JSON.stringify(entries, null, 2));
+}
+
+function hasAdminAccess(request) {
+    const suppliedPassword = request.get('x-admin-password') || '';
+    if (!adminPassword || suppliedPassword.length !== adminPassword.length) return false;
+    return require('crypto').timingSafeEqual(Buffer.from(suppliedPassword), Buffer.from(adminPassword));
 }
 
 const storage = multer.diskStorage({
@@ -56,9 +63,10 @@ app.post('/api/entregas', upload.single('activityFile'), (request, response) => 
     const studentName = (request.body.studentName || '').trim();
     const filename = `${slugify(studentName)}.html`;
 
-    if (!studentName || !slugify(studentName)) {
+    const validStudentName = /^[\p{L}][\p{L}\s'-]{1,99}$/u.test(studentName);
+    if (!validStudentName || !slugify(studentName)) {
         if (request.file) fs.unlinkSync(request.file.path);
-        return response.status(400).json({ message: 'Informe o nome completo do aluno.' });
+        return response.status(400).json({ message: 'Informe um nome completo válido, usando apenas letras, espaços, apóstrofos ou hífens.' });
     }
     if (!request.file) return response.status(400).json({ message: 'Selecione o arquivo HTML da atividade.' });
 
@@ -73,6 +81,20 @@ app.post('/api/entregas', upload.single('activityFile'), (request, response) => 
     entries.push(entry);
     writeEntries(entries);
     response.status(201).json({ message: 'Atividade enviada com sucesso.', entry });
+});
+
+app.delete('/api/entregas/:filename', (request, response) => {
+    if (!adminPassword) return response.status(503).json({ message: 'A exclusão não está configurada. Defina ADMIN_PASSWORD ao iniciar o servidor.' });
+    if (!hasAdminAccess(request)) return response.status(401).json({ message: 'Senha do professor inválida.' });
+
+    const entries = readEntries();
+    const entry = entries.find(item => item.filename === request.params.filename);
+    if (!entry) return response.status(404).json({ message: 'Entrega não encontrada.' });
+
+    const filePath = path.join(uploadsDirectory, entry.filename);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    writeEntries(entries.filter(item => item.filename !== entry.filename));
+    response.json({ message: 'Entrega excluída com sucesso.' });
 });
 
 app.use((error, request, response, next) => {
