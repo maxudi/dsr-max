@@ -100,9 +100,61 @@
         footer strong { color: #fff; }
         html { scroll-behavior: smooth; }
         section { scroll-margin-top: 60px; }
+
+        .course-picker {
+            position: fixed; inset: 0; z-index: 1000; overflow-y: auto;
+            background: #eef4f6; color: #172033; padding: 2rem 1rem;
+        }
+        .course-picker[hidden] { display: none; }
+        .picker-inner { max-width: 1040px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .picker-brand { color: #c0001a; font-size: .8rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
+        .picker-title { max-width: 700px; font-size: clamp(2rem, 5vw, 3.3rem); font-weight: 800; line-height: 1.12; margin: .4rem 0 .8rem; }
+        .picker-intro { color: #526171; max-width: 600px; margin-bottom: 2rem; }
+        .course-option {
+            display: flex; flex-direction: column; min-height: 270px; padding: 1.7rem; background: #fff;
+            border: 1px solid #d9e3e8; border-top: 7px solid var(--course-color); border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(23,32,51,.08); text-decoration: none; color: inherit;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .course-option:hover { color: inherit; transform: translateY(-5px); box-shadow: 0 16px 32px rgba(23,32,51,.14); }
+        .course-icon { color: var(--course-color); font-size: 2rem; margin-bottom: 1.15rem; }
+        .course-option small { color: var(--course-color); font-weight: 800; letter-spacing: .8px; text-transform: uppercase; }
+        .course-option h2 { font-size: 1.45rem; font-weight: 800; margin: .4rem 0 .6rem; }
+        .course-option p { color: #526171; font-size: .9rem; margin-bottom: 1.2rem; }
+        .course-action { margin-top: auto; color: var(--course-color); font-weight: 800; font-size: .9rem; }
+        .change-course { position: fixed; right: 1rem; bottom: 1rem; z-index: 200; border: 0; border-radius: 50px; padding: .55rem .9rem; background: #172033; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,.2); font-size: .82rem; font-weight: 700; }
     </style>
 </head>
 <body>
+
+<section class="course-picker" id="coursePicker" aria-labelledby="pickerTitle">
+    <div class="picker-inner">
+        <div class="picker-brand"><i class="bi bi-building me-1"></i> Anhanguera · Graduação em Tecnologia</div>
+        <h1 class="picker-title" id="pickerTitle">Selecione a disciplina para acessar o ambiente de estudos.</h1>
+        <p class="picker-intro">Cada disciplina reúne aulas, resumos e materiais organizados para acompanhar o semestre.</p>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <a class="course-option" href="#aulas" data-course="dsr" style="--course-color:#c0001a;">
+                    <i class="bi bi-pc-display-horizontal course-icon"></i>
+                    <small>12 aulas disponíveis</small>
+                    <h2>Desenvolvimento de Soluções Remotas</h2>
+                    <p>Planejamento, comunicação, infraestrutura e entrega de software em equipes distribuídas.</p>
+                    <span class="course-action">Entrar na disciplina <i class="bi bi-arrow-right"></i></span>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a class="course-option" href="programacao-web-1.html" style="--course-color:#087e8b;">
+                    <i class="bi bi-code-square course-icon"></i>
+                    <small>12 aulas estruturadas</small>
+                    <h2>Programação Web I</h2>
+                    <p>Internet, HTML5, CSS, JavaScript e os fundamentos para construir páginas web.</p>
+                    <span class="course-action">Entrar na disciplina <i class="bi bi-arrow-right"></i></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<button class="change-course" id="changeCourse" type="button"><i class="bi bi-grid-3x3-gap me-1"></i> Disciplinas</button>
 
 <div class="hero">
     <div class="container position-relative">
@@ -649,6 +701,16 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    const coursePicker = document.getElementById('coursePicker');
+    const changeCourse = document.getElementById('changeCourse');
+    document.querySelector('[data-course="dsr"]').addEventListener('click', () => {
+        coursePicker.hidden = true;
+    });
+    changeCourse.addEventListener('click', () => {
+        coursePicker.hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.section-nav .nav-link');
     const observer = new IntersectionObserver(entries => {

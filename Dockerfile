@@ -1,12 +1,13 @@
-FROM nginx:alpine
+FROM node:20-alpine
 
-# Remove default nginx page
-RUN rm -rf /usr/share/nginx/html/*
+WORKDIR /app
 
-# Copy all HTML files
-COPY *.html /usr/share/nginx/html/
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Custom nginx config: gzip + security headers
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY . .
+RUN mkdir -p uploads
 
 EXPOSE 80
+
+CMD ["node", "server.js"]

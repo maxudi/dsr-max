@@ -1,0 +1,13 @@
+{
+  "name": "programacao-web-1",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
+    "qs": "^6.16.0"
+  }
+}

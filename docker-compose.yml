@@ -1,0 +1,10 @@
+services:
+  portal:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - entregas-web:/app/uploads
+
+volumes:
+  entregas-web:
