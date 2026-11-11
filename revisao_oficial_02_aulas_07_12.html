@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Revisão para a Avaliação Oficial 2 de Desenvolvimento de Soluções Remotas, referente às aulas 07 a 12.">
+    <title>Revisão para Avaliação Oficial 2 | DSR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root { --red:#c0001a; --orange:#e65100; --ink:#172033; --muted:#64748b; --line:#e2e8f0; --bg:#f8fafc; }
+        * { box-sizing:border-box; }
+        body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter,system-ui,-apple-system,sans-serif; }
+        .topbar { position:sticky; top:0; z-index:10; padding:.8rem 1.5rem; background:#fff; border-bottom:1px solid var(--line); }
+        .topbar a { color:var(--ink); text-decoration:none; font-weight:700; }
+        .hero { padding:3rem 1rem 2.5rem; background:linear-gradient(135deg,#7f0011,var(--red)); color:#fff; }
+        .hero-inner,.content { max-width:1050px; margin:auto; }
+        .content { padding:2rem 1rem 4rem; }
+        .panel,.question { background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 8px 24px rgba(15,23,42,.05); }
+        .panel { padding:1.4rem; }
+        .question { margin-bottom:1rem; padding:1.2rem; border-left:4px solid var(--orange); }
+        .question-title { font-weight:700; line-height:1.5; }
+        .option { display:block; margin-top:.55rem; padding:.65rem .8rem; border:1px solid #dbe3ed; border-radius:8px; cursor:pointer; }
+        .option:hover { background:#fff7ed; border-color:#fdba74; }
+        .option input { margin-right:.55rem; }
+        .question.is-correct { border-left-color:#198754; }
+        .question.is-incorrect { border-left-color:#dc3545; }
+        .question-result { margin:.75rem 0 0; font-weight:700; }
+        .actions { display:flex; gap:.75rem; flex-wrap:wrap; }
+        @media (max-width:600px) {
+            .topbar { padding:.75rem 1rem; }
+            .hero { padding-top:2.2rem; }
+            .panel,.question { padding:1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar"><a href="index.html"><i class="bi bi-arrow-left-circle text-danger me-2"></i>DSR · Portal da disciplina</a></header>
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="small text-uppercase fw-bold opacity-75">Atividade de revisão</div>
+            <h1 class="h2 fw-bold mt-2">Revisão para Avaliação Oficial 2</h1>
+            <p class="mb-0 opacity-75">Referente às aulas 07 a 12 · 40 questões objetivas com resultado automático.</p>
+        </div>
+    </section>
+    <main class="content">
+        <section class="panel mb-4" aria-labelledby="studentHeading">
+            <h2 id="studentHeading" class="h5 fw-bold">Identificação do aluno</h2>
+            <p class="small text-muted">Informe seus dados. Depois de responder às 40 questões, corrija a atividade e baixe o PDF com seu resultado.</p>
+            <div class="row g-3">
+                <div class="col-md-7">
+                    <label for="studentName" class="form-label fw-semibold">Nome completo *</label>
+                    <input id="studentName" class="form-control" type="text" maxlength="120" autocomplete="name" required>
+                </div>
+                <div class="col-md-5">
+                    <label for="className" class="form-label fw-semibold">Turma *</label>
+                    <input id="className" class="form-control" type="text" maxlength="60" required>
+                </div>
+            </div>
+            <p class="small text-muted mt-3 mb-0"><i class="bi bi-info-circle me-1"></i>As respostas e o resultado ficam nesta página até você baixar o PDF; a atividade não envia dados automaticamente.</p>
+        </section>
+
+        <div id="questions" aria-label="Questões da atividade"></div>
+        <section class="panel mt-4">
+            <div class="actions">
+                <button type="button" class="btn btn-danger fw-semibold" id="gradeButton"><i class="bi bi-check2-circle me-1"></i>Corrigir atividade</button>
+                <button type="button" class="btn btn-warning fw-semibold" id="pdfButton" disabled><i class="bi bi-file-earmark-pdf me-1"></i>Baixar resultado em PDF</button>
+                <a class="btn btn-outline-danger fw-semibold" id="emailLink" href="mailto:dsr@netminas.com"><i class="bi bi-envelope me-1"></i>Abrir e-mail para envio</a>
+            </div>
+            <div id="result" class="mt-3" aria-live="polite"></div>
+            <div id="feedback" aria-live="polite"></div>
+        </section>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        const questionBank = [
+            { prompt:'Qual tecnologia de isolamento no nível de sistema operacional permite empacotar uma aplicação e todas as suas dependências em um recipiente padronizado para execução em qualquer ambiente Linux?', options:['Máquina Virtual Xen','Docker Container','Hyper-V Manager','Emulator QEMU'], correct:'b' },
+            { prompt:'No Linux, qual recurso do kernel é responsável por delimitar fisicamente os recursos de hardware (como limite máximo de memória RAM e núcleos de CPU) que um container pode utilizar?', options:['Namespaces','Control Groups (cgroups)','Swap Memory','Virtual File System (VFS)'], correct:'b' },
+            { prompt:'Qual arquivo padrão é utilizado pelo Docker para definir as instruções de construção automatizada de uma imagem de container?', options:['docker-compose.yml','Dockerfile','Makefile','Containerfile.json'], correct:'b' },
+            { prompt:'Em ambientes Docker, qual driver de rede padrão é atribuído automaticamente aos containers para permitir a comunicação entre containers na mesma máquina hospedeira?', options:['Host','Bridge','Overlay','Macvlan'], correct:'b' },
+            { prompt:'O Kubernetes é amplamente utilizado no mercado. Qual é a sua principal função em uma infraestrutura distribuída em nuvem?', options:['Atuar como compilador de código Java e Python','Orquestrar, escalar e gerenciar o ciclo de vida de containers','Substituir os bancos de dados relacionais por tabelas em memória','Funcionar como um editor de código-fonte colaborativo na nuvem'], correct:'b' },
+            { prompt:'Qual é a menor unidade implantável e gerenciável no Kubernetes, que agrupa um ou mais containers compartilhando a mesma rede e armazenamento?', options:['Node','Pod','Cluster','Namespace'], correct:'b' },
+            { prompt:'No Control Plane do Kubernetes, qual é o banco de dados chave-valor distribuído responsável por armazenar todo o estado e as configurações do cluster?', options:['PostgreSQL','Redis','etcd','MongoDB'], correct:'c' },
+            { prompt:'Qual ferramenta de Infraestrutura como Código (IaC) utiliza a linguagem declarativa HCL para provisionar recursos em múltiplos provedores de nuvem?', options:['HashiCorp Terraform','Jenkins','GitLeaks','Postman'], correct:'a' },
+            { prompt:'A prática ruim de criar e alterar servidores manualmente clicando no painel web do provedor de nuvem é conhecida informalmente no mercado como:', options:['DevOps','GitOps','ClickOps','SecOps'], correct:'c' },
+            { prompt:'Qual propriedade da Infraestrutura como Código garante que a execução do comando de aplicação múltiplas vezes sem alterar o código resultará no mesmo estado final?', options:['Imutabilidade','Idempotência','Escalabilidade','Redundância'], correct:'b' },
+            { prompt:'Na sigla CI/CD, o que significa a etapa de CI (Continuous Integration)?', options:['Integração Contínua de alterações de código com testes e verificações automatizadas','Contratação Contínua de engenheiros remotos','Instalação Contínua de cabos de rede nos servidores','Compilação Individual de código sem versionamento'], correct:'a' },
+            { prompt:'Qual ferramenta é amplamente utilizada no ecossistema Kubernetes para implementar o padrão GitOps, sincronizando o cluster com o repositório Git?', options:['ArgoCD','Docker Desktop','VirtualBox','Wireshark'], correct:'a' },
+            { prompt:'Ferramentas automáticas que analisam o código-fonte antes da compilação para verificar erros de sintaxe, estilo e formatação são chamadas de:', options:['Hypervisors','Linters','Load Balancers','Firewalls'], correct:'b' },
+            { prompt:'Em projetos de Internet das Coisas (IoT) e Edge Computing, qual protocolo binário leve de comunicação pub/sub é amplamente utilizado em vez do HTTP?', options:['SMTP','MQTT','FTP','Telnet'], correct:'b' },
+            { prompt:'No protocolo MQTT, a funcionalidade "Last Will and Testament" (LWT) serve para:', options:['Deletar o banco de dados do servidor quando o contrato expirar','Publicar uma mensagem automática pelo broker se o dispositivo perder a conexão abruptamente','Aumentar a velocidade da CPU do dispositivo de borda','Criptografar a memória RAM do hardware embarcado'], correct:'b' },
+            { prompt:'O padrão de arquitetura de software móvel e embarcado que permite ao sistema continuar funcionando e salvando dados locais quando a internet cai é chamado de:', options:['Cloud-Only','Offline-First','Always-Online','Server-Centric'], correct:'b' },
+            { prompt:'A cultura de gestão financeira compartilhada para governança de custos em ambientes de nuvem é conhecida como:', options:['FinOps','SecOps','SysAdmin','HelpDesk'], correct:'a' },
+            { prompt:'Na prática de FinOps, a adequação contínua do tamanho dos recursos virtuais (CPU/RAM/Disco) à real necessidade de uso da aplicação é chamada de:', options:['Over-provisioning','Rightsizing','Hardening','Refactoring'], correct:'b' },
+            { prompt:'Na Engenharia de Confiabilidade de Sites (SRE), o indicador quantitativo real medido em tempo real para avaliar a qualidade de um serviço é o:', options:['SLA','SLO','SLI','KPI'], correct:'c' },
+            { prompt:'Após um incidente grave em produção, a cultura SRE recomenda a realização de uma reunião pós-incidente orientada por qual filosofia?', options:['Post-Mortem Blameless (sem culpabilização de indivíduos)','Punição Disciplinar Imediata','Auditoria Financeira de Danos','Cancelamento de Contratos de Clientes'], correct:'a' },
+            { prompt:'Para reduzir o tamanho final das imagens Docker em produção e eliminar compiladores desnecessários, qual instrução de construção no Dockerfile deve ser empregada?', options:['Multi-stage Build (estágios múltiplos de construção)','Single-layer Commit','Root Execution Mode','Dynamic Container Linking'], correct:'a' },
+            { prompt:'Uma aplicação travou internamente em um loop infinito de deadlock. Ela não responde ao tráfego de rede, mas o processo principal continua rodando. Qual Probe do Kubernetes deve ser configurada para detectar esse problema e reiniciar o container?', options:['Readiness Probe','Liveness Probe','Startup Probe','Network Probe'], correct:'b' },
+            { prompt:'Para evitar que a aplicação receba tráfego de usuários antes de concluir o carregamento de caches e dependências na inicialização, qual recurso do Kubernetes remove o Pod do Service sem reiniciá-lo?', options:['Readiness Probe','Liveness Probe','Auto-scaler Operator','Pod Disruption Budget'], correct:'a' },
+            { prompt:'No Terraform, quando dois engenheiros trabalham remotamente na mesma infraestrutura, qual mecanismo é utilizado no Remote Backend para impedir escritas simultâneas e corrupção do arquivo terraform.tfstate?', options:['State Locking (trava de estado)','Data Encryption','Plan Export','Code Review Gate'], correct:'a' },
+            { prompt:'Qual é a principal vantagem de segurança da arquitetura GitOps baseada no Modelo Pull (ex: ArgoCD) em relação ao Modelo Push tradicional das esteiras de CI/CD?', options:['Não exige a exposição de credenciais administrativas do cluster Kubernetes para servidores externos','Elimina a necessidade de utilizar contêineres Docker','Permite alterar o código em produção sem aprovação no Git','Funciona sem conexão com repositórios de controle de versão'], correct:'a' },
+            { prompt:'Em um sistema IoT agrícola transmitindo em uma rede 3G instável, deseja-se enviar alertas críticos sem risco de perda. Qual nível de QoS do protocolo MQTT garante o aperto de mão de 4 vias assegurando a entrega exatamente uma vez?', options:['QoS 0','QoS 1','QoS 2','QoS 3'], correct:'c' },
+            { prompt:'No protocolo MQTT, se uma aplicação de telemetria envia dados não críticos a cada 500ms e deseja economizar banda e bateria descartando pacotes perdidos sem confirmações, qual QoS é indicado?', options:['QoS 0','QoS 1','QoS 2','QoS 4'], correct:'a' },
+            { prompt:'Para resolver conflitos de dados entre dispositivos móveis em modo offline que alteraram o mesmo registro simultaneamente, qual estrutura matemática descentralizada permite a convergência automática de dados sem bloqueio central?', options:['CRDTs (Conflict-free Replicated Data Types)','Mutex Global','Lock de Tabela SQL','Last-Write-Wins cego'], correct:'a' },
+            { prompt:'No gerenciamento de incidentes de grande escala, qual profissional assume a liderança e autoridade máxima na sala de crise (War Room), coordenando ações e delegando tarefas técnicas sem digitar comandos diretamente?', options:['Communications Lead','Incident Commander (IC)','Tech Lead','Product Owner'], correct:'b' },
+            { prompt:'Segundo as práticas de SRE, o que deve acontecer com a esteira de desenvolvimento de produto quando uma equipe esgota 100% do seu Orçamento de Erro (Error Budget) durante a janela mensal?', options:['O lançamento de novas funcionalidades é congelado para focar 100% na estabilização e débitos técnicos','O SLO é alterado para um valor menor para zerar a métrica','Os desenvolvedores são dispensados do trabalho remoto','O monitoramento é desligado para parar de registrar erros'], correct:'a' },
+            { prompt:'Diferente de um contrato formal (SLA) ou de uma medição real (SLI), o que representa o SLO (Service Level Objective)?', options:['A meta interna de confiabilidade estabelecida pela equipe técnica de engenharia e produto','A multa contratual paga ao cliente em dinheiro','O número total de servidores físicos no data center','O salário dos engenheiros de confiabilidade'], correct:'a' },
+            { prompt:'Na segurança de pipelines de CI/CD para equipes remotas, qual técnica elimina o armazenamento de chaves e segredos estáticos de longa duração no repositório GitHub para autenticação na nuvem?', options:['OpenID Connect (OIDC) com papéis federados','Envio de senhas por e-mail no commit','Gravação de tokens no arquivo .env do Git','Desativação da autenticação de dois fatores'], correct:'a' },
+            { prompt:'Um Pod do Kubernetes exibe o status de erro Exit Code 137 (OOMKilled). O que exatamente ocorreu com esse container no nível de sistema operacional?', options:['O container foi encerrado pelo OOM Killer do kernel Linux por ultrapassar o limite estipulado em resources.limits.memory.','A aplicação sofreu um erro de sintaxe no código e encerrou a execução normal.','O disco rígido do nó físico encheu completamente impedindo a gravação de logs.','O cluster Kubernetes perdeu a conexão com o banco de dados etcd.'], correct:'a' },
+            { prompt:'Um desenvolvedor executou uma alteração manual no painel web da AWS modificando uma regra de Security Group. Na manhã seguinte, a esteira rodou o comando terraform apply. O que acontecerá durante a execução do Terraform?', options:['O Terraform detectará o Drift de configuração e desfará a alteração manual para alinhar a nuvem ao código declarativo.','O Terraform atualizará automaticamente o código local excluindo os arquivos .tf.','O estado entrará em deadlock e destruirá toda a VPC.','A alteração manual será mantida e o Terraform ignorará o Security Group para sempre.'], correct:'a' },
+            { prompt:'Um desenvolvedor configurou a Liveness Probe de uma aplicação no Kubernetes para executar uma consulta complexa SQL no banco de dados central. Durante um pico de tráfego, o banco ficou lento e a Probe estourou o timeout. Qual será a consequência no cluster?', options:['O Kubernetes interpretará que a aplicação morreu e reiniciará todos os Pods repetidamente, agravando o colapso em cascata.','O Kubernetes aumentará automaticamente a memória RAM do banco de dados.','Nada acontecerá, pois a Liveness Probe ignora o tempo de resposta.','Os Pods serão migrados imediatamente para o provedor de nuvem concorrente.'], correct:'a' },
+            { prompt:'Em um sistema em produção rodando no Kubernetes, a imagem utilizada no Deployment está configurada com a tag latest (image: minha-app:latest). Por que essa prática é considerada perigosa em pipelines de CI/CD?', options:['Quebra a imutabilidade do deploy, pois instâncias do mesmo Pod podem baixar versões de código diferentes e inviabiliza rollbacks precisos.','O Kubernetes proíbe o uso da tag latest bloqueando a inicialização do Pod.','Aumenta o custo financeiro da fatura de nuvem em 50%.','Impede que o contêiner acesse a rede interna do cluster.'], correct:'a' },
+            { prompt:'Em sistemas remotos com atualizações de firmware Over-The-Air (OTA) em dispositivos de borda, qual estratégia de particionamento de memória Flash evita o bricking (inutilização física) em caso de queda de energia durante o update?', options:['Particionamento Duplo A/B Booting com fallback automático via Watchdog Timer','Gravação direta na memória RAM volátil','Download de arquivos zip não compactados via HTTP','Formatação total do disco antes do download'], correct:'a' },
+            { prompt:'Ao utilizar o algoritmo Last-Write-Wins (LWW) baseado em relógios locais de dispositivos móveis offline para resolver conflitos de sincronização, qual é o principal risco técnico de engenharia?', options:['Sobrescrita e perda silenciosa de dados válidos devido ao desvio de sincronia do relógio físico (Clock Drift)','Bloqueio imediato da porta 80 do servidor','Estouro de memória no broker MQTT','Exclusão automática de registros no banco relacional central'], correct:'a' },
+            { prompt:'Em FinOps, uma empresa remota identifica cobranças elevadas persistentes de armazenamento mesmo após destruir centenas de máquinas virtuais (EC2/Compute). Qual é a causa raiz provável dessa ineficiência financeira?', options:['Discos de bloco (Volumes EBS/Persistent Disks) órfãos mantidos ativos e faturados após o término das instâncias','Cobrança indevida da linguagem de programação Python','Erro de arredondamento de fuso horário do provedor de nuvem','Uso excessivo de tags no código Terraform'], correct:'a' },
+            { prompt:'Em uma auditoria de segurança de offboarding remoto, descobre-se que um ex-prestador de serviços manteve acesso de leitura aos servidores de produção. Qual controle técnico previne essa falha de governança?', options:['Centralização de acessos via Identity Provider (IdP) federado com provisionamento/desprovisionamento SCIM automatizado','Troca manual de senhas em planilhas compartilhadas a cada 6 meses','Envio de contrato assinado via correio físico','Bloqueio do endereço IP residencial do colaborador'], correct:'a' }
+        ];
+
+        const labels = ['a', 'b', 'c', 'd'];
+        const questionsEl = document.getElementById('questions');
+        const resultEl = document.getElementById('result');
+        const feedbackEl = document.getElementById('feedback');
+        const gradeButton = document.getElementById('gradeButton');
+        const pdfButton = document.getElementById('pdfButton');
+        let gradedResult = null;
+
+        function escapeHtml(value) {
+            return value.replace(/[&<>"']/g, character => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' })[character]);
+        }
+
+        function renderQuestions() {
+            questionsEl.innerHTML = questionBank.map((question, index) => {
+                const number = index + 1;
+                return `<article class="question" id="question-${number}">
+                    <div class="question-title">${number}. ${escapeHtml(question.prompt)}</div>
+                    ${question.options.map((option, optionIndex) => `<label class="option"><input type="radio" name="question-${number}" value="${labels[optionIndex]}"> <strong>${labels[optionIndex].toUpperCase()})</strong> ${escapeHtml(option)}</label>`).join('')}
+                    <p class="question-result d-none" id="question-result-${number}"></p>
+                </article>`;
+            }).join('');
+        }
+
+        function showFeedback(message, type) {
+            feedbackEl.innerHTML = `<div class="alert alert-${type} mb-0">${message}</div>`;
+        }
+
+        function collectAnswers() {
+            return questionBank.map((question, index) => ({
+                question,
+                number:index + 1,
+                answer:document.querySelector(`input[name="question-${index + 1}"]:checked`)?.value || ''
+            }));
+        }
+
+        function gradeActivity() {
+            const name = document.getElementById('studentName').value.trim();
+            const className = document.getElementById('className').value.trim();
+            const answers = collectAnswers();
+            const missing = answers.filter(item => !item.answer).length;
+            if (!name || !className) {
+                showFeedback('Preencha o nome completo e a turma antes de corrigir a atividade.', 'danger');
+                return;
+            }
+            if (missing) {
+                showFeedback(`Ainda faltam ${missing} questão(ões). Responda todas as questões para ver o resultado.`, 'warning');
+                return;
+            }
+
+            const correct = answers.filter(item => item.answer === item.question.correct).length;
+            gradedResult = { name, className, answers, correct, percentage:Math.round(correct / answers.length * 100) };
+            answers.forEach(item => {
+                const questionEl = document.getElementById(`question-${item.number}`);
+                const resultEl = document.getElementById(`question-result-${item.number}`);
+                const isCorrect = item.answer === item.question.correct;
+                questionEl.classList.add(isCorrect ? 'is-correct' : 'is-incorrect');
+                resultEl.classList.remove('d-none');
+                resultEl.classList.add(isCorrect ? 'text-success' : 'text-danger');
+                resultEl.textContent = isCorrect
+                    ? 'Resposta correta.'
+                    : `Resposta incorreta. Gabarito: ${item.question.correct.toUpperCase()}) ${item.question.options[labels.indexOf(item.question.correct)]}`;
+            });
+            resultEl.innerHTML = `<div class="alert alert-info mb-0"><strong>Resultado: ${correct} de ${answers.length} acertos (${gradedResult.percentage}%).</strong> Confira a correção em cada questão e baixe o PDF para registrar sua entrega.</div>`;
+            feedbackEl.innerHTML = '';
+            pdfButton.disabled = false;
+            gradeButton.disabled = true;
+            document.querySelectorAll('#questions input[type="radio"]').forEach(input => { input.disabled = true; });
+        }
+
+        function downloadPdf() {
+            if (!gradedResult) {
+                showFeedback('Corrija a atividade antes de gerar o PDF.', 'warning');
+                return;
+            }
+            if (!window.jspdf) {
+                showFeedback('A biblioteca de PDF não carregou. Verifique a conexão e tente novamente.', 'danger');
+                return;
+            }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit:'mm', format:'a4' });
+            const margin = 15;
+            const width = 180;
+            let y = 16;
+            const addText = (text, size=10, gap=4) => {
+                doc.setFontSize(size);
+                const lines = doc.splitTextToSize(text, width);
+                if (y + lines.length * 5 > 282) {
+                    doc.addPage();
+                    y = 16;
+                }
+                doc.text(lines, margin, y);
+                y += lines.length * 5 + gap;
+            };
+
+            doc.setFont('helvetica', 'bold');
+            addText('Revisão para Avaliação Oficial 2 — Aulas 07 a 12', 15, 7);
+            doc.setFont('helvetica', 'normal');
+            addText(`Aluno: ${gradedResult.name}`, 11, 3);
+            addText(`Turma: ${gradedResult.className}`, 10, 3);
+            doc.setFont('helvetica', 'bold');
+            addText(`Resultado: ${gradedResult.correct} de ${gradedResult.answers.length} acertos (${gradedResult.percentage}%)`, 12, 7);
+            doc.setFont('helvetica', 'normal');
+            gradedResult.answers.forEach(item => {
+                const marked = item.answer.toUpperCase();
+                const key = item.question.correct.toUpperCase();
+                const status = item.answer === item.question.correct ? 'Correta' : `Incorreta — gabarito ${key}`;
+                addText(`${item.number}. ${item.question.prompt}\nResposta marcada: ${marked} | ${status}`, 9, 4);
+            });
+
+            const safeName = gradedResult.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'aluno';
+            doc.save(`revisao-oficial-2-aulas-07-a-12-${safeName}.pdf`);
+            showFeedback('PDF gerado. Anexe o arquivo ao e-mail para envio ao professor.', 'success');
+        }
+
+        document.getElementById('emailLink').addEventListener('click', event => {
+            if (gradedResult) {
+                const subject = encodeURIComponent('Revisão para Avaliação Oficial 2 — Aulas 07 a 12');
+                const body = encodeURIComponent(`Professor, segue em anexo a revisão para a Avaliação Oficial 2.\nAluno: ${gradedResult.name}\nTurma: ${gradedResult.className}\nResultado: ${gradedResult.correct}/40 acertos (${gradedResult.percentage}%).`);
+                event.currentTarget.href = `mailto:dsr@netminas.com?subject=${subject}&body=${body}`;
+            }
+        });
+        gradeButton.addEventListener('click', gradeActivity);
+        pdfButton.addEventListener('click', downloadPdf);
+        renderQuestions();
+    </script>
+</body>
+</html>
